@@ -12,6 +12,11 @@ Submit job for simulation with main DAG:
 qsub j-sim-main-null.sh
 ```
 
+Plot results:
+
+```bash
+stata -b sim-hists.do all
+```
 
 
 ## Partial DAGs
@@ -26,3 +31,15 @@ qsub j-sim-main-null-bmicovid.sh
 qsub j-sim-main-null-bmicovars.sh 
 qsub j-sim-main-null-covarscovid.sh 
 ```
+
+Plot results:
+
+```bash
+stata -b sim-hists.do bmi
+stata -b sim-hists.do covars
+stata -b sim-hists.do covid
+stata -b sim-hists.do bmi_covars
+stata -b sim-hists.do bmi_covid
+stata -b sim-hists.do covars_covid
+```
+
