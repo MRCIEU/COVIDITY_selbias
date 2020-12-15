@@ -9,12 +9,13 @@
 clear
 graph drop _all
 
-
+local setup = "`1'"
+di "`setup'"
 
 set seed 1234
 
 tempname memhold
-postfile `memhold' str30 outcometype str30 strata estimate lower upper using "out/sim-main-null.dta" , replace
+postfile `memhold' str30 outcometype str30 strata estimate lower upper using "out/sim-main-null-`setup'.dta" , replace
 
 * number of people in UKB sample
 local n = 421122
@@ -56,11 +57,43 @@ while `i'<=`nSim' {
 	gen pCovid=exp(covidRiskPart)/(1+exp(covidRiskPart))
 	gen covid = runiform() <= pCovid
 		
-	
-
 	***
 	*** selection - 4.33% are selected into our sample (have had a covid test taken)
-	gen logitSelectPart= 0.1435*sd_bmi + -0.0799*education_alevel + -0.0265*education_voc + -0.1348*education_degree + 0.1023*sex_m + 0.2273*sd_age + 0.1441*smoking_previous + 0.2977*smoking_current + 0.1190*sd_tdi + log(2)*covid + -3.2162
+
+	if ("`setup'" == "all") {
+		di "generate selection with all indep vars"
+		gen logitSelectPart = 0.1435*sd_bmi + -0.0799*education_alevel + -0.0265*education_voc + -0.1348*education_degree + 0.1023*sex_m + 0.2273*sd_age + 0.1441*smoking_previous + 0.2977*smoking_current + 0.1190*sd_tdi + log(2)*covid + -3.2162
+	}
+	else if ("`setup'" == "bmi") {
+		di "generate selection with bmi only"
+		gen logitSelectPart = 0.1435*sd_bmi + -3.2162
+	}
+	else if	("`setup'" == "covars") {
+		di "generate selection with covars only"
+		gen logitSelectPart =  -0.0799*education_alevel + -0.0265*education_voc + -0.1348*education_degree + 0.1023*sex_m + 0.2273*sd_age + 0.1441*smoking_previous + 0.2977*smoking_current + 0.1190*sd_tdi + -3.2162
+        }
+	else if	("`setup'" == "covid") {
+		di "generate selection with covid only"
+		gen logitSelectPart = log(2)*covid + -3.2162
+        }
+	else if	("`setup'" == "bmi_covars") {
+		di "generate selection with bmi and covars"
+		gen logitSelectPart = 0.1435*sd_bmi + -0.0799*education_alevel + -0.0265*education_voc + -0.1348*education_degree + 0.1023*sex_m + 0.2273*sd_age + 0.1441*smoking_previous + 0.2977*smoking_current + 0.1190*sd_tdi + -3.2162
+        }
+	else if ("`setup'" == "bmi_covid") {
+		di "generate selection with bmi and covid"
+		gen logitSelectPart = 0.1435*sd_bmi + log(2)*covid + -3.2162
+        }
+	else if ("`setup'" == "covars_covid") {
+		di "generate selection with covars and covid
+		gen logitSelectPart = -0.0799*education_alevel + -0.0265*education_voc + -0.1348*education_degree + 0.1023*sex_m + 0.2273*sd_age + 0.1441*smoking_previous + 0.2977*smoking_current + 0.1190*sd_tdi + log(2)*covid + -3.2162
+        }
+	else {
+		di "Valid setup not specified : `setup'"
+		exit, clear
+	}
+
+
 	gen pSelect=exp(logitSelectPart)/(1+exp(logitSelectPart))
 	gen selection = runiform() <= pSelect
 	
@@ -74,8 +107,7 @@ while `i'<=`nSim' {
 	summ
 	
 	
-	
-	
+
 	***
 	*** association tests
 
@@ -138,7 +170,7 @@ postclose `memhold'
 ** load in the simulation results and plot distributions
 
 graph drop _all
-use "out/sim-main-null.dta", clear
+use "out/sim-main-null-`setup'.dta", clear
 
 replace estimate = log(estimate)
 
@@ -152,6 +184,7 @@ twoway (histogram estimate if strata == "all", color(red%30)) ///
 	legend(order(1 "All" 2 "All: conf adjusted" 3 "Selected" 4 "Selected: conf adj" 5 "All controls=everyone"))
 
 
+graph export "out/sim-main-null-`setup'.pdf", replace
 
 
 
