@@ -12,6 +12,9 @@ graph drop _all
 local setup = "`1'"
 di "`setup'"
 
+
+log using "out/log-`setup'.txt", text replace
+
 set seed 1234
 
 tempname memhold
@@ -164,7 +167,7 @@ while `i'<=`nSim' {
 postclose `memhold'
 
 
-
+log close
 
 
 
