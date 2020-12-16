@@ -9,7 +9,7 @@
 Submit job for simulation with main DAG:
 
 ```bash
-qsub j-sim-main-null.sh
+qsub j-sim-main-null-all.sh
 ```
 
 Plot results:
