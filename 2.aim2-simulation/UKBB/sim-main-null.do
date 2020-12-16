@@ -27,7 +27,8 @@ local i = 1
 local nSim = 500
 
 while `i'<=`nSim' {
-			
+		
+	di "***"	
 	di `i'
 	set obs `n'
 	
@@ -113,6 +114,10 @@ while `i'<=`nSim' {
 
 	***
 	*** association tests
+
+	di "***"
+	di "*** association tests"
+	di "***"
 
 	* test assoc in whole sample
 	di "assoc in whole sample"
