@@ -13,7 +13,7 @@ local setup = "`1'"
 di "`setup'"
 
 
-log using "out/log-`setup'.txt", text replace
+log using "out/log-null-`setup'.txt", text replace
 
 set seed 1234
 
