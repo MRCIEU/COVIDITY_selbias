@@ -15,7 +15,7 @@ qsub j-sim-main-null-all.sh
 Plot results:
 
 ```bash
-stata -b sim-hists.do all
+stata -b sim-hists.do null all
 ```
 
 
@@ -35,11 +35,43 @@ qsub j-sim-main-null-covarscovid.sh
 Plot results:
 
 ```bash
-stata -b sim-hists.do bmi
-stata -b sim-hists.do covars
-stata -b sim-hists.do covid
-stata -b sim-hists.do bmi_covars
-stata -b sim-hists.do bmi_covid
-stata -b sim-hists.do covars_covid
+stata -b sim-hists.do null bmi
+stata -b sim-hists.do null covars
+stata -b sim-hists.do null covid
+stata -b sim-hists.do null bmi_covars
+stata -b sim-hists.do null bmi_covid
+stata -b sim-hists.do null covars_covid
 ```
+
+
+## Version with effect of BMI on COVID risk
+
+```bash
+qsub j-sim-main-effect-all.sh
+```
+
+```bash
+stata -b sim-hists.do effect all
+```
+
+```bash
+qsub j-sim-main-effect-bmionly.sh
+qsub j-sim-main-effect-covarsonly.sh
+qsub j-sim-main-effect-covidonly.sh
+qsub j-sim-main-effect-bmicovid.sh
+qsub j-sim-main-effect-bmicovars.sh 
+qsub j-sim-main-effect-covarscovid.sh 
+```
+
+Plot results:
+
+```bash
+stata -b sim-hists.do effect bmi
+stata -b sim-hists.do effect covars
+stata -b sim-hists.do effect covid
+stata -b sim-hists.do effect bmi_covars
+stata -b sim-hists.do effect bmi_covid
+stata -b sim-hists.do effect covars_covid
+```
+
 
