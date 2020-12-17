@@ -20,6 +20,8 @@ di "`setup'"
 graph drop _all
 use "out/sim-main-`bmi_assoc'-`setup'.dta", clear
 
+summ
+
 replace estimate = log(estimate)
 
 
