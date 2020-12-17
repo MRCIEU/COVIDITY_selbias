@@ -75,3 +75,17 @@ stata -b sim-hists.do effect covars_covid
 ```
 
 
+
+## Extreme version
+
+To show bias does occur if relationships are strong enough
+
+```bash
+qsub j-sim-main-null-all-extreme.sh
+```
+
+Plot results:
+
+```bash
+stata -b sim-hists.do null all-extreme
+```
