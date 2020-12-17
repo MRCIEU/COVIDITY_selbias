@@ -5,9 +5,11 @@
 clear
 
 
+* either effect or null for simulations where bmi has an effect or no effect on covid risk (the hypothesis we are testing)
 local bmi_assoc = "`1'"
 di "`bmi_assoc'"
 
+* relates to the edges including in the dag (specifically what has a direct effect on selection)
 local setup = "`2'"
 di "`setup'"
 
