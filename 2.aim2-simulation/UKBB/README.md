@@ -80,6 +80,8 @@ stata -b sim-hists.do effect covars_covid
 
 To show bias does occur if relationships are strong enough
 
+Extreme version when no effect of BMI on covid risk:
+
 ```bash
 qsub j-sim-main-null-all-extreme.sh
 ```
@@ -89,3 +91,19 @@ Plot results:
 ```bash
 stata -b sim-hists.do null all-extreme
 ```
+
+
+
+Extreme version when BMI affects covid risk:
+
+```bash
+qsub j-sim-main-effect-all-extreme.sh
+```
+
+Plot results:
+
+```bash
+stata -b sim-hists.do effect all-extreme
+```
+
+
