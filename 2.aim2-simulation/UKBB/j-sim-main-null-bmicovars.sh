@@ -9,7 +9,7 @@ cd $PBS_O_WORKDIR
 
 module add apps/stata15
 
-stata -b sim-main-null.do bmi_covars
+stata sim-main-null.do bmi_covars
 
 date
 

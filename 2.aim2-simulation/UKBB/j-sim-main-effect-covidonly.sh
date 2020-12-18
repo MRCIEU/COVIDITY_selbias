@@ -9,7 +9,7 @@ cd $PBS_O_WORKDIR
 
 module add apps/stata15
 
-stata -b sim-main-effect.do covid
+stata sim-main-effect.do covid
 
 date
 
