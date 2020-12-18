@@ -24,15 +24,33 @@ summ
 
 replace estimate = log(estimate)
 
-
 set scheme s1mono
+
+* set xrange depending on the simulation
+if ("`bmi_assoc'" == "effect") {
+	local xmin = 0.9
+	local xmax = 1.1
+}
+else if ("`setup'" == "all-extreme") {
+	local xmin = -0.1
+	local xmax = 0.7
+}
+else {
+	local xmin = -0.1
+	local xmax = 0.2
+}
+
+
+di "xmin `xmin' xmax `xmax'"
+
 twoway (histogram estimate if strata == "all", color(red%30)) ///        
 	(histogram estimate if strata == "all-confadj", color(blue%30)) ///
 	(histogram estimate if strata == "selected", color(green%30)) ///   
 	(histogram estimate if strata == "selected-confadj", color(grey%30)) ///
 	(histogram estimate if strata == "control-everyone", color(purple%30)), ///
 	legend(order(1 "All" 2 "All: conf adjusted" 3 "Selected" 4 "Selected: conf adj" 5 "All controls=everyone")) ///
-	xscale(r(-0.1 0.2)) xlabel(-0.1(0.05)0.2)
+	xscale(r(`xmin' `xmax')) xlabel(`xmin'(0.05)`xmax')
+
 
 graph export "out/sim-main-`bmi_assoc'-`setup'.pdf", replace
 
