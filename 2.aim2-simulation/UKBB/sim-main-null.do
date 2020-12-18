@@ -48,7 +48,7 @@ while `i'<=`nSim' {
 	gen smoking_previous = smoke_rand >=0.099 & smoke_rand < 0.099+0.332
 
 	* BMI - mean 27.4, sd 4.75
-	gen sd_bmi =  -0.1561*education_alevel + -0.0289*education_voc + -0.2739*education_degree + 0.1606*sex_m + 0.0215*sd_age + 0.1049*smoking_previous - 0.1075*smoking_current + 0.0881*sd_tdi + rnormal(0,1)
+	gen sd_bmi =  -0.1561*education_alevel + -0.0289*education_voc + -0.2739*education_degree + 0.1606*sex_m + 0.0215*sd_age + 0.1049*smoking_previous - 0.1075*smoking_current + 0.0881*sd_tdi - 0.0042 + rnormal(0,1)
 	regress sd_bmi education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi
 	
 		
