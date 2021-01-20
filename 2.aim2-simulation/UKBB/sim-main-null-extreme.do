@@ -14,7 +14,7 @@ log using "out/log-null-all-extreme.txt", text replace
 set seed 1234
 
 tempname memhold
-postfile `memhold' str30 outcometype str30 strata estimate lower upper using "out/sim-main-null-all-extreme.dta" , replace
+postfile `memhold' str30 strata estimate lower upper using "out/sim-main-null-all-extreme.dta" , replace
 
 * number of people in UKB sample
 local n = 421122
@@ -94,7 +94,7 @@ while `i'<=`nSim' {
 	local beta _b[sd_bmi]
 	local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 	local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
-	post `memhold' ("CONT") ("all") (exp(`beta')) (exp(`ciL')) (exp(`ciU')) 
+	post `memhold' ("all") (`beta') (`ciL') (`ciU')
 
 	* test assoc in whole sample adjusted for confounders
 	di "assoc in whole sample adjusted for confounders"
@@ -102,7 +102,7 @@ while `i'<=`nSim' {
 	local beta _b[sd_bmi]
 	local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 	local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
-	post `memhold' ("CONT") ("all-confadj") (exp(`beta')) (exp(`ciL')) (exp(`ciU')) 
+	post `memhold' ("all-confadj") (`beta') (`ciL') (`ciU') 
 	
 	* test assoc in subsample 
 	di "assoc in selected sub sample"
@@ -110,7 +110,7 @@ while `i'<=`nSim' {
 	local beta _b[sd_bmi]
 	local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 	local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
-	post `memhold' ("CONT") ("selected") (exp(`beta')) (exp(`ciL')) (exp(`ciU')) 
+	post `memhold' ("selected") (`beta') (`ciL') (`ciU')
 
 	* test assoc in subsample - only those tested for COVID, adjusted for confounders
 	di "assoc in selected sub sample adjusted for confounders"
@@ -118,7 +118,7 @@ while `i'<=`nSim' {
 	local beta _b[sd_bmi]
 	local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 	local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
-	post `memhold' ("CONT") ("selected-confadj") (exp(`beta')) (exp(`ciL')) (exp(`ciU')) 
+	post `memhold' ("selected-confadj") (`beta') (`ciL') (`ciU')
 	
 	* test with different controls: case=those +ve AND selected, control=everyone else
 	gen covidControlEveryone = covid==1 & selection==1
@@ -128,7 +128,7 @@ while `i'<=`nSim' {
 	local beta _b[sd_bmi]
 	local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 	local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
-	post `memhold' ("CONT") ("control-everyone") (exp(`beta')) (exp(`ciL')) (exp(`ciU'))
+	post `memhold' ("control-everyone") (`beta') (`ciL') (`ciU')
 
 	
 	local i=`i'+ 1

@@ -22,7 +22,7 @@ use "out/sim-main-`bmi_assoc'-`setup'.dta", clear
 
 summ
 
-replace estimate = log(estimate)
+*replace estimate = log(estimate)
 
 set scheme s1mono
 
