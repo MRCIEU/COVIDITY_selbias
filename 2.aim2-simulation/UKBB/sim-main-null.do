@@ -61,8 +61,7 @@ while `i'<=`nSim' {
 	gen pCovid=exp(covidRiskPart)/(1+exp(covidRiskPart))
 	gen covid = runiform() <= pCovid
 
-	logistic covid education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi, coef
-
+*	logistic covid education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi, coef
 		
 	***
 	*** selection - 4.33% are selected into our sample (have had a covid test taken)
@@ -103,7 +102,7 @@ while `i'<=`nSim' {
 	gen pSelect=exp(logitSelectPart)/(1+exp(logitSelectPart))
 	gen selection = runiform() <= pSelect
 	
-	logistic selection sd_bmi education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi covid, coef
+*	logistic selection sd_bmi education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi covid, coef
 	
 	
 	***
