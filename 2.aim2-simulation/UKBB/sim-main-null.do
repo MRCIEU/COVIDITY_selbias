@@ -25,6 +25,9 @@ postfile `memhold' str30 strata estimate lower upper using "out/sim-main-null-`s
 
 
 * number of people in UKB sample
+tempname memhold2
+postfile `memhold2' str30 var mean using "out/sim-main-null-summaries-`setup'-`covidSelectOR'.dta" , replace
+
 local n = 421122
 
 local i = 1
@@ -124,7 +127,16 @@ while `i'<=`nSim' {
 	
 	summ
 	
-	
+
+	***
+	*** store variable summaries so we can check they are on average the right proportions / means
+
+	summ sd_bmi
+	post `memhold2' ("sd_bmi") (r(mean))
+	summ covid
+	post `memhold2' ("covid") (r(mean))
+	summ selection
+	post `memhold2' ("selection") (r(mean))
 
 	***
 	*** association tests
@@ -184,6 +196,7 @@ while `i'<=`nSim' {
 }
 
 postclose `memhold'
+postclose `memhold2'
 
 
 log close
