@@ -13,12 +13,18 @@ di "`bmi_assoc'"
 local setup = "`2'"
 di "`setup'"
 
+* OR of covid on selection
+local covidSelectOR = "`3'"
+di "`covidSelectOR'"
+
 
 **
 ** load in the simulation results and plot distributions
 
 graph drop _all
-use "out/sim-main-`bmi_assoc'-`setup'.dta", clear
+
+use "out/sim-main-`bmi_assoc'-`setup'-`covidSelectOR'.dta", clear
+
 
 summ
 
@@ -52,5 +58,4 @@ twoway (histogram estimate if strata == "all", color(red%30)) ///
 	xscale(r(`xmin' `xmax')) xlabel(`xmin'(0.05)`xmax')
 
 
-graph export "out/sim-main-`bmi_assoc'-`setup'.pdf", replace
-
+graph export "out/sim-main-`bmi_assoc'-`setup'-`covidSelectOR'.pdf", replace

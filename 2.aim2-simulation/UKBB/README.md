@@ -107,3 +107,32 @@ stata -b sim-hists.do effect all-extreme
 ```
 
 
+
+## Versions with different OR for the effect of COVID on selection
+
+### Assuming OR=10
+
+```bash
+qsub j-sim-main-null-all-OR10.sh
+qsub j-sim-main-effect-all-OR10.sh
+```
+
+```bash
+stata -b sim-hists.do null all 10
+stata -b sim-hists.do effect all 10
+
+```
+
+### Assuming OR=5
+
+```bash
+qsub j-sim-main-null-all-OR5.sh
+qsub j-sim-main-effect-all-OR5.sh
+```
+
+```bash
+stata -b sim-hists.do null all 5
+stata -b sim-hists.do effect all 5
+```
+
+

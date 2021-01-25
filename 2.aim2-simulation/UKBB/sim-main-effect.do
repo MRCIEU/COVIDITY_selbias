@@ -13,13 +13,19 @@ graph drop _all
 local setup = "`1'"
 di "`setup'"
 
+local covidSelectOR = "`2'"
+di "`covidSelectOR'"
 
-log using "out/log-effect-`setup'.txt", text replace
+log using "out/log-effect-`setup'-`covidSelectOR'.txt", text replace
 
 set seed 1234
 
 tempname memhold
-postfile `memhold' str30 strata estimate lower upper using "out/sim-main-effect-`setup'.dta" , replace
+postfile `memhold' str30 strata estimate lower upper using "out/sim-main-effect-`setup'-`covidSelectOR'.dta" , replace
+
+
+
+
 
 * number of people in UKB sample
 local n = 421122
@@ -69,7 +75,16 @@ while `i'<=`nSim' {
 
 	if ("`setup'" == "all") {
 		di "generate selection with all indep vars"
-		gen logitSelectPart = 0.1435*sd_bmi + -0.0799*education_alevel + -0.0265*education_voc + -0.1348*education_degree + 0.1023*sex_m + 0.2273*sd_age + 0.1441*smoking_previous + 0.2977*smoking_current + 0.1190*sd_tdi + log(2)*covid + -3.2162
+		if ("`covidSelectOR'" == "2") {
+			gen logitSelectPart = 0.1435*sd_bmi + -0.0799*education_alevel + -0.0265*education_voc + -0.1348*education_degree + 0.1023*sex_m + 0.2273*sd_age + 0.1441*smoking_previous + 0.2977*smoking_current + 0.1190*sd_tdi + log(2)*covid + -3.2162
+		}
+		else if ("`covidSelectOR'" == "5") {
+			gen logitSelectPart = 0.1435*sd_bmi + -0.0799*education_alevel + -0.0265*education_voc + -0.1348*education_degree + 0.1023*sex_m + 0.2273*sd_age + 0.1441*smoking_previous + 0.2977*smoking_current + 0.1190*sd_tdi + log(5)*covid + -3.4
+		}
+		else if	("`covidSelectOR'" == "10") {
+			gen logitSelectPart = 0.1435*sd_bmi + -0.0799*education_alevel + -0.0265*education_voc + -0.1348*education_degree + 0.1023*sex_m + 0.2273*sd_age + 0.1441*smoking_previous + 0.2977*smoking_current + 0.1190*sd_tdi + log(10)*covid + -3.75
+		}
+
 	}
 	else if ("`setup'" == "bmi") {
 		di "generate selection with bmi only"
