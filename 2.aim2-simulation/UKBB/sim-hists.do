@@ -37,10 +37,6 @@ if ("`bmi_assoc'" == "effect") {
 	local xmin = 0.9
 	local xmax = 1.1
 }
-else if ("`setup'" == "all-extreme") {
-	local xmin = -0.1
-	local xmax = 0.7
-}
 else {
 	local xmin = -0.1
 	local xmax = 0.2
