@@ -35,12 +35,12 @@ qsub j-sim-main-null-covarscovid.sh
 Plot results:
 
 ```bash
-stata -b sim-hists.do null bmi
-stata -b sim-hists.do null covars
-stata -b sim-hists.do null covid
-stata -b sim-hists.do null bmi_covars
-stata -b sim-hists.do null bmi_covid
-stata -b sim-hists.do null covars_covid
+stata -b ../sim-hists.do null bmi
+stata -b ../sim-hists.do null covars
+stata -b ../sim-hists.do null covid
+stata -b ../sim-hists.do null bmi_covars
+stata -b ../sim-hists.do null bmi_covid
+stata -b ../sim-hists.do null covars_covid
 ```
 
 
@@ -66,12 +66,12 @@ qsub j-sim-main-effect-covarscovid.sh
 Plot results:
 
 ```bash
-stata -b sim-hists.do effect bmi
-stata -b sim-hists.do effect covars
-stata -b sim-hists.do effect covid
-stata -b sim-hists.do effect bmi_covars
-stata -b sim-hists.do effect bmi_covid
-stata -b sim-hists.do effect covars_covid
+stata -b ../sim-hists.do effect bmi
+stata -b ../sim-hists.do effect covars
+stata -b ../sim-hists.do effect covid
+stata -b ../sim-hists.do effect bmi_covars
+stata -b ../sim-hists.do effect bmi_covid
+stata -b ../sim-hists.do effect covars_covid
 ```
 
 
@@ -87,8 +87,8 @@ qsub j-sim-main-effect-all-OR10.sh
 ```
 
 ```bash
-stata -b sim-hists.do null all 10
-stata -b sim-hists.do effect all 10
+stata -b ../sim-hists.do null all 10
+stata -b ../sim-hists.do effect all 10
 
 ```
 
@@ -100,8 +100,8 @@ qsub j-sim-main-effect-all-OR5.sh
 ```
 
 ```bash
-stata -b sim-hists.do null all 5
-stata -b sim-hists.do effect all 5
+stata -b ../sim-hists.do null all 5
+stata -b ../sim-hists.do effect all 5
 ```
 
 
