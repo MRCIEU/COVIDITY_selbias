@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l walltime=2:00:00,nodes=1:ppn=1
+#PBS -l walltime=5:00:00,nodes=1:ppn=1
 #PBS -o output-sim-main-null-5.file
 #---------------------------------------------
 

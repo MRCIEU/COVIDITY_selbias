@@ -31,7 +31,7 @@ postfile `memhold2' str30 var mean using "out/sim-main-null-summaries-`setup'-`c
 local n = 421122
 
 local i = 1
-local nSim = 500
+local nSim = 1000
 
 while `i'<=`nSim' {
 		
