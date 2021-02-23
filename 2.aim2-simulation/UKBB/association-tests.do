@@ -4,13 +4,12 @@
 *** Louise AC Millard August 2020
 ***
 
-
 	summ sd_bmi
-	post `memhold2' ("sd_bmi") (r(mean))
+	file write myfile2 "sd_bmi," %7.6f (`r(mean)') _n
 	summ covid
-	post `memhold2' ("covid") (r(mean))
+	file write myfile2 "covid," %7.6f (`r(mean)') _n
 	summ selection
-	post `memhold2' ("selection") (r(mean))
+	file write myfile2 "selection," %7.6f (`r(mean)') _n
 
 	***
 	*** association tests
@@ -25,7 +24,7 @@
 	local beta _b[sd_bmi]
 	local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 	local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
-	post `memhold' ("all") (`beta') (`ciL') (`ciU')
+	file write myfile "all," %7.6f (`beta') "," %7.6f (`ciL') "," %7.6f (`ciU') _n
 
 	* test assoc in whole sample adjusted for confounders
 	di "assoc in whole sample adjusted for confounders"
@@ -33,15 +32,15 @@
 	local beta _b[sd_bmi]
 	local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 	local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
-	post `memhold' ("all-confadj") (`beta') (`ciL') (`ciU')
-	
+	file write myfile "all-confadj," %7.6f (`beta') "," %7.6f (`ciL') "," %7.6f (`ciU') _n	
+
 	* test assoc in subsample 
 	di "assoc in selected sub sample"
 	logistic covid sd_bmi if selection == 1, coef
 	local beta _b[sd_bmi]
 	local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 	local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
-	post `memhold' ("selected") (`beta') (`ciL') (`ciU')
+	file write myfile "selected," %7.6f (`beta') "," %7.6f (`ciL') "," %7.6f (`ciU') _n
 
 	* test assoc in subsample - only those tested for COVID, adjusted for confounders
 	di "assoc in selected sub sample adjusted for confounders"
@@ -49,8 +48,7 @@
 	local beta _b[sd_bmi]
 	local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 	local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
-	post `memhold' ("selected-confadj") (`beta') (`ciL') (`ciU')
-
+	file write myfile "selected-confadj," %7.6f (`beta') "," %7.6f (`ciL') "," %7.6f (`ciU') _n
 	
 	* test with different controls: case=those +ve AND selected, control=everyone else
 	gen covidControlEveryone = covid==1 & selection==1
@@ -60,14 +58,8 @@
 	local beta _b[sd_bmi]
 	local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 	local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
-	post `memhold' ("control-everyone") (`beta') (`ciL') (`ciU')
-
+	file write myfile "control-everyone," %7.6f (`beta') "," %7.6f (`ciL') "," %7.6f (`ciU') _n
 	
-
-
-
-
-
 
 
 

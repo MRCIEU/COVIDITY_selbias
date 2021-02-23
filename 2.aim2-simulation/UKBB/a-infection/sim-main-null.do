@@ -19,14 +19,8 @@ log using "out/log-null-`setup'.txt", text replace
 
 set seed 1234
 
-tempname memhold
-postfile `memhold' str30 strata estimate lower upper using "out/sim-main-null-`setup'-`covidSelectOR'.dta" , replace
-
-
-
-* number of people in UKB sample
-tempname memhold2
-postfile `memhold2' str30 var mean using "out/sim-main-null-summaries-`setup'-`covidSelectOR'.dta" , replace
+file open myfile using "out/sim-main-null-`setup'-`covidSelectOR'.csv", write replace
+file open myfile2 using "out/sim-main-null-summaries-`setup'-`covidSelectOR'.csv", write replace
 
 local n = 421122
 
@@ -138,8 +132,8 @@ while `i'<=`nSim' {
 
 }
 
-postclose `memhold'
-postclose `memhold2'
+file close myfile
+file close myfile2
 
 
 log close
