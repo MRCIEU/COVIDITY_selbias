@@ -89,7 +89,6 @@ qsub j-sim-main-effect-all-OR10.sh
 ```bash
 stata -b ../sim-hists.do null all 10
 stata -b ../sim-hists.do effect all 10
-
 ```
 
 ### Assuming OR=5
@@ -105,3 +104,14 @@ stata -b ../sim-hists.do effect all 5
 ```
 
 
+
+###
+### Bias statistics
+
+
+Generate the average bias and monte carlo SE for each simulation version
+
+```bash
+Rscript ../sim-bias-estimates.R null
+Rscript ../sim-bias-estimates.R effect
+```
