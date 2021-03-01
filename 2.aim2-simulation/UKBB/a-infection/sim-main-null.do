@@ -22,6 +22,9 @@ set seed 1234
 file open myfile using "out/sim-main-null-`setup'-`covidSelectOR'.csv", write replace
 file open myfile2 using "out/sim-main-null-summaries-`setup'-`covidSelectOR'.csv", write replace
 
+file write myfile "iter,strata,estimate,lower,upper" _n
+file write myfile2 "iter,strata,mean" _n
+
 local n = 421122
 
 local i = 1
@@ -124,7 +127,7 @@ while `i'<=`nSim' {
 	***
 	*** store variable summaries so we can check they are on average the right proportions / means
 
-	do ../association-tests.do
+	do ../association-tests.do `i'
 	
 	local i=`i'+ 1
 	

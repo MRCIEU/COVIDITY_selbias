@@ -23,7 +23,8 @@ set seed 1234
 file open myfile using "out/sim-main-effect-`setup'-`covidSelectOR'.csv", write replace
 file open myfile2 using "out/sim-main-effect-summaries-`setup'-`covidSelectOR'.csv", write replace
 
-
+file write myfile "iter,strata,estimate,lower,upper" _n
+file write myfile2 "iter,strata,mean" _n
 
 
 * number of people in UKB sample
@@ -34,7 +35,7 @@ local nSim = 1000
 
 while `i'<=`nSim' {
 			
-	di `i'
+	di $i
 	set obs `n'
 	
 	* set up confounders
@@ -131,7 +132,7 @@ while `i'<=`nSim' {
 	***
 	*** store variable summaries so we can check they are on average the right proportions / means
 
-	do ../association-tests.do
+	do ../association-tests.do `i'
 	
 	local i=`i'+ 1
 	

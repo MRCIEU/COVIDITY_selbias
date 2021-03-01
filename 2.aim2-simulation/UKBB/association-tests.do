@@ -4,12 +4,14 @@
 *** Louise AC Millard August 2020
 ***
 
+local i = `1'
+
 	summ sd_bmi
-	file write myfile2 "sd_bmi," %7.6f (`r(mean)') _n
+	file write myfile2 %04.0f (`i') ",sd_bmi," %7.6f (`r(mean)') _n
 	summ covid
-	file write myfile2 "covid," %7.6f (`r(mean)') _n
+	file write myfile2 %04.0f (`i') ",covid," %7.6f (`r(mean)') _n
 	summ selection
-	file write myfile2 "selection," %7.6f (`r(mean)') _n
+	file write myfile2 %04.0f (`i') ",selection," %7.6f (`r(mean)') _n
 
 	***
 	*** association tests
@@ -24,7 +26,7 @@
 	local beta _b[sd_bmi]
 	local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 	local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
-	file write myfile "all," %7.6f (`beta') "," %7.6f (`ciL') "," %7.6f (`ciU') _n
+	file write myfile %04.0f (`i') ",all," %7.6f (`beta') "," %7.6f (`ciL') "," %7.6f (`ciU') _n
 
 	* test assoc in whole sample adjusted for confounders
 	di "assoc in whole sample adjusted for confounders"
@@ -32,7 +34,7 @@
 	local beta _b[sd_bmi]
 	local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 	local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
-	file write myfile "all-confadj," %7.6f (`beta') "," %7.6f (`ciL') "," %7.6f (`ciU') _n	
+	file write myfile %04.0f (`i') ",all-confadj," %7.6f (`beta') "," %7.6f (`ciL') "," %7.6f (`ciU') _n	
 
 	* test assoc in subsample 
 	di "assoc in selected sub sample"
@@ -40,7 +42,7 @@
 	local beta _b[sd_bmi]
 	local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 	local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
-	file write myfile "selected," %7.6f (`beta') "," %7.6f (`ciL') "," %7.6f (`ciU') _n
+	file write myfile %04.0f (`i') ",selected," %7.6f (`beta') "," %7.6f (`ciL') "," %7.6f (`ciU') _n
 
 	* test assoc in subsample - only those tested for COVID, adjusted for confounders
 	di "assoc in selected sub sample adjusted for confounders"
@@ -48,7 +50,7 @@
 	local beta _b[sd_bmi]
 	local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 	local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
-	file write myfile "selected-confadj," %7.6f (`beta') "," %7.6f (`ciL') "," %7.6f (`ciU') _n
+	file write myfile %04.0f (`i') ",selected-confadj," %7.6f (`beta') "," %7.6f (`ciL') "," %7.6f (`ciU') _n
 	
 	* test with different controls: case=those +ve AND selected, control=everyone else
 	gen covidControlEveryone = covid==1 & selection==1
@@ -58,7 +60,7 @@
 	local beta _b[sd_bmi]
 	local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 	local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
-	file write myfile "control-everyone," %7.6f (`beta') "," %7.6f (`ciL') "," %7.6f (`ciU') _n
+	file write myfile %04.0f (`i') ",control-everyone," %7.6f (`beta') "," %7.6f (`ciL') "," %7.6f (`ciU') _n
 	
 
 
