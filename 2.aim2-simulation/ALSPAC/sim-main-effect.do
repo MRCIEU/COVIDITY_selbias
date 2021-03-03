@@ -136,7 +136,7 @@ while `i'<=`nSim' {
 	***
 	*** store variable summaries so we can check they are on average the right proportions / means
 
-	do ../../association-tests.do `i'
+	do ../association-tests.do `i'
 	
 	local i=`i'+ 1
 	
