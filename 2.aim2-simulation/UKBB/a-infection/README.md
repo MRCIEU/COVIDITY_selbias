@@ -87,8 +87,8 @@ qsub j-sim-main-effect-all-OR10.sh
 ```
 
 ```bash
-stata -b ../sim-hists.do null all 10
-stata -b ../sim-hists.do effect all 10
+stata -b ../../sim-hists.do null all 10
+stata -b ../../sim-hists.do effect all 10
 ```
 
 ### Assuming OR=5
