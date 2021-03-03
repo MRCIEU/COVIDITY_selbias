@@ -15,7 +15,7 @@ qsub j-sim-main-null-all.sh
 Plot results:
 
 ```bash
-stata -b sim-hists.do null all
+stata -b ../../sim-hists.do null all
 ```
 
 
@@ -35,12 +35,12 @@ qsub j-sim-main-null-covarscovid.sh
 Plot results:
 
 ```bash
-stata -b ../sim-hists.do null bmi
-stata -b ../sim-hists.do null covars
-stata -b ../sim-hists.do null covid
-stata -b ../sim-hists.do null bmi_covars
-stata -b ../sim-hists.do null bmi_covid
-stata -b ../sim-hists.do null covars_covid
+stata -b ../../sim-hists.do null bmi
+stata -b ../../sim-hists.do null covars
+stata -b ../../sim-hists.do null covid
+stata -b ../../sim-hists.do null bmi_covars
+stata -b ../../sim-hists.do null bmi_covid
+stata -b ../../sim-hists.do null covars_covid
 ```
 
 
@@ -51,7 +51,7 @@ qsub j-sim-main-effect-all.sh
 ```
 
 ```bash
-stata -b sim-hists.do effect all
+stata -b ../../sim-hists.do effect all
 ```
 
 ```bash
@@ -66,12 +66,12 @@ qsub j-sim-main-effect-covarscovid.sh
 Plot results:
 
 ```bash
-stata -b ../sim-hists.do effect bmi
-stata -b ../sim-hists.do effect covars
-stata -b ../sim-hists.do effect covid
-stata -b ../sim-hists.do effect bmi_covars
-stata -b ../sim-hists.do effect bmi_covid
-stata -b ../sim-hists.do effect covars_covid
+stata -b ../../sim-hists.do effect bmi
+stata -b ../../sim-hists.do effect covars
+stata -b ../../sim-hists.do effect covid
+stata -b ../../sim-hists.do effect bmi_covars
+stata -b ../../sim-hists.do effect bmi_covid
+stata -b ../../sim-hists.do effect covars_covid
 ```
 
 
@@ -99,8 +99,8 @@ qsub j-sim-main-effect-all-OR5.sh
 ```
 
 ```bash
-stata -b ../sim-hists.do null all 5
-stata -b ../sim-hists.do effect all 5
+stata -b ../../sim-hists.do null all 5
+stata -b ../../sim-hists.do effect all 5
 ```
 
 
@@ -112,6 +112,6 @@ stata -b ../sim-hists.do effect all 5
 Generate the average bias and monte carlo SE for each simulation version
 
 ```bash
-Rscript ../sim-bias-estimates.R null
-Rscript ../sim-bias-estimates.R effect
+Rscript ../../sim-bias-estimates.R null
+Rscript ../../sim-bias-estimates.R effect
 ```
