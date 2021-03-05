@@ -15,12 +15,12 @@ di "`setup'"
 local covidSelectOR = "`2'"
 di "`covidSelectOR'"
 
-log using "out/log-null-`setup'.txt", text replace
+log using "out/log-effect-`setup'.txt", text replace
 
 set seed 1234
 
-file open myfile using "out/sim-main-null-`setup'-`covidSelectOR'.csv", write replace
-file open myfile2 using "out/sim-main-null-summaries-`setup'-`covidSelectOR'.csv", write replace
+file open myfile using "out/sim-main-effect-`setup'-`covidSelectOR'.csv", write replace
+file open myfile2 using "out/sim-main-effect-summaries-`setup'-`covidSelectOR'.csv", write replace
 
 file write myfile "iter,strata,estimate,lower,upper" _n
 file write myfile2 "iter,strata,mean" _n
