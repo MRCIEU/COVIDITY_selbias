@@ -132,7 +132,7 @@ while `i'<=`nSim' {
 	***
 	*** store variable summaries so we can check they are on average the right proportions / means
 
-	do ../../association-tests.do `i'
+	do ../../association-tests.do `i' "education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi"
 	
 	local i=`i'+ 1
 	

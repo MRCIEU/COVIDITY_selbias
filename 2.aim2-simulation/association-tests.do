@@ -4,7 +4,13 @@
 *** Louise AC Millard August 2020
 ***
 
+* iteration number
 local i = `1'
+
+* covariate names
+local covars = "`2'"
+
+
 
 	summ sd_bmi
 	file write myfile2 %04.0f (`i') ",sd_bmi," %7.6f (`r(mean)') _n
@@ -30,7 +36,7 @@ local i = `1'
 
 	* test assoc in whole sample adjusted for confounders
 	di "assoc in whole sample adjusted for confounders"
-	logistic covid sd_bmi education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi, coef
+	logistic covid sd_bmi `covars', coef
 	local beta _b[sd_bmi]
 	local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 	local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
@@ -46,7 +52,7 @@ local i = `1'
 
 	* test assoc in subsample - only those tested for COVID, adjusted for confounders
 	di "assoc in selected sub sample adjusted for confounders"
-	logistic covid sd_bmi education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi if selection == 1, coef
+	logistic covid sd_bmi `covars' if selection == 1, coef
 	local beta _b[sd_bmi]
 	local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 	local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
@@ -56,7 +62,7 @@ local i = `1'
 	gen covidControlEveryone = covid==1 & selection==1
 	
 	di "assoc in whole sample with cases=those +ve AND selected, control=everyone else"
-	logistic covidControlEveryone sd_bmi education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi, coef
+	logistic covidControlEveryone sd_bmi `covars', coef
 	local beta _b[sd_bmi]
 	local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 	local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
