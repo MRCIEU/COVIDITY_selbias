@@ -1,4 +1,4 @@
-*/
+/*
 
 A. R. Carter - 08/03/2021
 Generating parameter estimates in UK Biobank to inform simulations of COVID-19 infection in UK Biobank
