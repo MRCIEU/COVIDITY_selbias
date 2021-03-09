@@ -211,7 +211,7 @@ lab val death_vs_all death_vs_all
 ********************************************************************************
 
 * Simple variable to stratify by time based on before and after mass testing
-* Mass testing set to begin on 28th May 2020 defined (see excel file from RH)
+* Mass testing set to begin on 18th May 2020 defined (see excel file from RH)
 
 gen mass_test = 0 if first_test < date("20200518", "YMD") & first_test!=.
 replace mass_test = 1 if first_test >= date("20200518", "YMD") & first_test!=. & mass_test==.
