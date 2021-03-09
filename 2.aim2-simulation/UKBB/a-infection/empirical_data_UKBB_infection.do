@@ -19,24 +19,24 @@ cd "$resDir/results/COVIDITY/UKBB/for_simulations"
 regress sd_bmi i.eduyears_quali i.sex sd_age i.current_smoke sd_tdi
 matrix results = r(table)
 matrix results = results[1..6,1..12]
-	putexcel set 20210308_UKBB_simulations_infection.xlsx, sheet(bmi_outcome_all) modify
+	putexcel set 20210309_UKBB_simulations_infection.xlsx, sheet(bmi_outcome_all) modify
 	putexcel A1 = matrix(results), names nformat(number_d2)
 	putexcel A10="F stat" B10=`e(F)'
 	
 * Association of covariates with covid positive in tested sample
 * Create variable to define covid positive cases in the first wave
-* This uses the variable mass_test which identifies whether the participant had their first COVID-19 test before or after mass tsting began on the 28th May 2020, but specifies in line 21 that the first_positive_test must also have been received before the mass testing changes. If the participant had a negative COVID-19 test in the pre-mass testing period, but only tested positive in the post mass testing period, they would be defined as a control here
+* This uses the variable mass_test which identifies whether the participant had their first COVID-19 test before or after mass tsting began on the 18th May 2020, but specifies in line 21 that the first_positive_test must also have been received before the mass testing changes. If the participant had a negative COVID-19 test in the pre-mass testing period, but only tested positive in the post mass testing period, they would be defined as a control here
 gen covid_positive_phase1 = .
-replace covid_positive_phase1 = 1 if covid_positive==1 & mass_test==0 & first_positive_test <date("20200528", "YMD")
+replace covid_positive_phase1 = 1 if covid_positive==1 & mass_test==0 & first_positive_test <date("20200518", "YMD")
 replace covid_positive_phase1 = 0 if covid_positive_phase1==.
 lab var covid_positive_phase1 "Tested positive for COVID-19 before mass testing"
-lab def covid_positive_phase1 0 "COVID-19 negative before 28/5/20" 1 "COVID-19 positive before 28/5/20", modify
+lab def covid_positive_phase1 0 "COVID-19 negative before 18/5/20" 1 "COVID-19 positive before 18/5/20", modify
 lab val covid_positive_phase1 covid_positive_phase1
 
 logistic covid_positive_phase1 i.eduyears_quali i.sex sd_age i.current_smoke sd_tdi if covid_test==1 & mass_test==0 , coef
 matrix results = r(table)
 matrix results = results[1..6,1..12]
-	putexcel set 20210308_UKBB_simulations_infection.xlsx, sheet(covid_outcome_tested) modify
+	putexcel set 20210309_UKBB_simulations_infection.xlsx, sheet(covid_outcome_tested) modify
 	putexcel A1 = matrix(results), names nformat(number_d2)
 	
 * Association of BMI/covariates with receiving a covid test in the whole UKBB sample
@@ -46,24 +46,24 @@ gen covid_test_phase1 = .
 replace covid_test_phase1 = 1 if covid_test==1 & mass_test==0
 replace covid_test_phase1 = 0 if covid_test_phase1==.
 lab var covid_test_phase1 "First tested for COVID-19 before mass testing"
-lab def covid_test_phase1 0 "No COVID-19 test before 28/5/20" 1 "Tested for COVID-19 before 28/5/20", modify
+lab def covid_test_phase1 0 "No COVID-19 test before 18/5/20" 1 "Tested for COVID-19 before 18/5/20", modify
 lab val covid_test_phase1 covid_test_phase1
 	
 logistic covid_test sd_bmi i.eduyears_quali i.sex sd_age i.current_smoke sd_tdi, coef
 matrix results = r(table)
 matrix results = results[1..6,1..13]
-	putexcel set 20210308_UKBB_simulations_infection.xlsx, sheet(test_outcome_all) modify
+	putexcel set 20210309_UKBB_simulations_infection.xlsx, sheet(test_outcome_all) modify
 	putexcel A1 = matrix(results), names nformat(number_d2)
 	
 * Prevalence and distribution estimates
-putexcel set 20210308_UKBB_simulations_infection, sheet(prevalence_and_distributions) modify
+putexcel set 20210309_UKBB_simulations_infection, sheet(prevalence_and_distributions) modify
 putexcel A1="Variable" B1="Variable type" C1="Level" D1="Prevalence/mean" E1="percent/SD"	
 
 local x=1
 foreach var in sex covid_test_phase1 covid_positive_phase1 {
 
 	local x=`x'+1	
-	putexcel set 20210308_UKBB_simulations_infection, sheet(prevalence_and_distributions) modify
+	putexcel set 20210309_UKBB_simulations_infection, sheet(prevalence_and_distributions) modify
 	
 	tab `var', matcell(numbers)
 	
@@ -86,7 +86,7 @@ local x=7
 foreach var in current_smoke {
 	
 	local x=`x'+1	
-	putexcel set 20210308_UKBB_simulations_infection, sheet(prevalence_and_distributions) modify
+	putexcel set 20210309_UKBB_simulations_infection, sheet(prevalence_and_distributions) modify
 	
 	tab `var', matcell(numbers)
 	
@@ -113,7 +113,7 @@ local x=10
 foreach var in eduyears_quali {
 	
 	local x=`x'+1	
-	putexcel set 20210308_UKBB_simulations_infection, sheet(prevalence_and_distributions) modify
+	putexcel set 20210309_UKBB_simulations_infection, sheet(prevalence_and_distributions) modify
 	
 	tab `var', matcell(numbers)
 	
@@ -146,7 +146,7 @@ local x=14
 foreach var in tdi_cat {
 	
 	local x=`x'+1	
-	putexcel set 20210308_UKBB_simulations_infection, sheet(prevalence_and_distributions) modify
+	putexcel set 20210309_UKBB_simulations_infection, sheet(prevalence_and_distributions) modify
 	
 	tab `var', matcell(numbers)
 	
@@ -181,7 +181,7 @@ local x=19
 foreach var in age sd_age bmi_0_0 sd_bmi tdi_0_0 sd_tdi {
 	
 	local x=`x'+1	
-	putexcel set 20210308_UKBB_simulations_infection, sheet(prevalence_and_distributions) modify
+	putexcel set 20210309_UKBB_simulations_infection, sheet(prevalence_and_distributions) modify
 	
 	summ `var'
 			
