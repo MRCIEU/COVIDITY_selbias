@@ -211,12 +211,13 @@ lab val death_vs_all death_vs_all
 ********************************************************************************
 
 * Simple variable to stratify by time based on before and after mass testing
-* Mass testing set to begin on 28th May 2020 defined (see excel file from RH)
+* Mass testing set to begin on 18th May 2020 defined (see excel file from RH)
 
-gen mass_test = 0 if first_positive_test < date("20200528", "YMD") & first_positive_test!=.
-replace mass_test = 1 if first_positive_test >= date("20200528", "YMD") & first_positive_test!=. & mass_test==.
+gen mass_test = 0 if first_test < date("20200518", "YMD") & first_test!=.
+replace mass_test = 1 if first_test >= date("20200518", "YMD") & first_test!=. & mass_test==.
 lab var mass_test "First Covid test before or after mass testing in tested ppts."
-lab def mass_test 0 "Pre mass testing" 1 "Post mass testing"
+lab def mass_test 0 "Pre mass testing" 1 "Post mass testing", modify
 lab val mass_test mass_test
 
 save "covidity_data_20210304.dta", replace
+
