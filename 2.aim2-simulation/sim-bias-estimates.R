@@ -21,7 +21,7 @@ printStats <- function(simres, trueeffect, strata, outfile) {
 	## calculate monte carlo standard error
 	nsim = nrow(simres)
 
-	mcSE = (1/(nsim*(nsim-1))) * sum((simres$bias-meanbias)^2)	
+	mcSE = sqrt((1/(nsim*(nsim-1))) * sum((simres$bias-meanbias)^2))
 
 
 	#print(paste0(strata, ": ", meanbias, ", ", mcSE))
@@ -33,14 +33,7 @@ printStats <- function(simres, trueeffect, strata, outfile) {
 
 formatStat <- function(stat) {
 
-	return(signif(stat,digits=3))
-
-#	if (stat<0.001) {
-#		return("<0.001")
-#	}
-#	else {
-#		return(sprintf("%.3f", stat))
-#	}
+	return(sprintf("%.4f", stat))
 
 }
 

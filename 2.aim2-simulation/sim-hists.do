@@ -34,13 +34,16 @@ set scheme s1mono
 
 * set xrange depending on the simulation
 if ("`bmi_assoc'" == "effect") {
-	local xmin = 0.9
-	local xmax = 1.1
+	local xmin = 0.6
+	local xmax = 1.6
 }
 else {
-	local xmin = -0.1
-	local xmax = 0.2
+	local xmin = -0.4
+	local xmax = 0.4
 }
+
+
+
 
 
 di "xmin `xmin' xmax `xmax'"
@@ -51,7 +54,7 @@ twoway (histogram estimate if strata == "all", color(red%30)) ///
 	(histogram estimate if strata == "selected-confadj", color(grey%30)) ///
 	(histogram estimate if strata == "control-everyone", color(purple%30)), ///
 	legend(order(1 "All" 2 "All: conf adjusted" 3 "Selected" 4 "Selected: conf adj" 5 "All controls=everyone")) ///
-	xscale(r(`xmin' `xmax')) xlabel(`xmin'(0.05)`xmax')
+	xscale(r(`xmin' `xmax')) xlabel(`xmin'(0.1)`xmax')
 
 
 graph export "out/sim-main-`bmi_assoc'-`setup'-`covidSelectOR'.pdf", replace
