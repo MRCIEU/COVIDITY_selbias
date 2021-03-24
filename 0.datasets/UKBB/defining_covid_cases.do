@@ -232,20 +232,20 @@ lab var negative_nontested_phase2 "non-tested only vs Covid negative confirmed v
 * This variable is based on the *date of first positive test* for stratifying on time
 
 * Pre mass testing period
-gen covid_positive_test_phase1 = 1 if covid_test_result==1 & first_positive_test < date("20200518", "YMD")
-replace covid_positive_test_phase1 = 0 if covid_positive_test_phase1==. | covid_positive_test_phase1==0
-lab def covid_positive_test_phase1 0 "No test/test negative" 1 "Covid test positive", modify
-lab val covid_positive_test_phase1 covid_positive_test_phase1
-lab var covid_positive_test_phase1 "all ppts. (inc -ive test) vs Covid positive confirmed via test in pre-mass testing"
+gen positive_test_phase1 = 1 if covid_test_result==1 & first_positive_test < date("20200518", "YMD")
+replace positive_test_phase1 = 0 if positive_test_phase1==. | positive_test_phase1==0
+lab def positive_test_phase1 0 "No test/test negative" 1 "Covid test positive", modify
+lab val positive_test_phase1 positive_test_phase1
+lab var positive_test_phase1 "all ppts. (inc -ive test) vs Covid positive confirmed via test in pre-mass testing"
 
 * Post mass testing period
 * Phase 1 test positive participants are excluded from this variable and set to missing
 * This
-gen covid_positive_test_phase2 = 1 if covid_test_result==1 & first_positive_test >= date("20200518", "YMD") & covid_positive_test_phase1!=1
-replace covid_positive_test_phase2 = 0 if covid_positive_test_phase2==. & covid_positive_test_phase1!=1
-lab def covid_positive_test_phase2 0 "No test/test negative" 1 "Covid test positive", modify
-lab val covid_positive_test_phase2 covid_positive_test_phase2
-lab var covid_positive_test_phase2 "all ppts. (inc -ive test) vs Covid positive confirmed via test in post-mass testing"
+gen positive_test_phase2 = 1 if covid_test_result==1 & first_positive_test >= date("20200518", "YMD") & positive_test_phase1!=1
+replace positive_test_phase2 = 0 if positive_test_phase2==. & positive_test_phase1!=1
+lab def positive_test_phase2 0 "No test/test negative" 1 "Covid test positive", modify
+lab val positive_test_phase2 positive_test_phase2
+lab var positive_test_phase2 "all ppts. (inc -ive test) vs Covid positive confirmed via test in post-mass testing"
 
 * This variable does not include any mortality data. Therefore, participants could have a death of U07.1 recorded (COVID diagnosed via test) and be classed as "untested" if we do not have their test data/results
 
@@ -258,7 +258,7 @@ lab var covid_positive_test_phase2 "all ppts. (inc -ive test) vs Covid positive 
 
 * Pre mass testing period
 gen positive_phase1 = 1 if covid_test_result==1 & first_positive_test < date("20200518", "YMD") | covid_death==1 & date_of_death < date("20200518", "YMD") 
-replace positive_phase1 = 0 if covid_positive_phase1==. | covid_positive_phase1==0
+replace positive_phase1 = 0 if positive_phase1==. | positive_phase1==0
 lab def positive_phase1 0 "No test/test negative" 1 "Covid test positive", modify
 lab val positive_phase1 positive_phase1
 lab var positive_phase1 "all ppts. (inc -ive test) vs Covid positive (test or death) pre-mass testing"
