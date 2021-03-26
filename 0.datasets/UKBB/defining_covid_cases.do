@@ -1,6 +1,6 @@
 /*
 
-A.R. Carter // 04/03/2021
+A.R. Carter // 24/03/2021
 Defining COVID-19 infection and severity in UK Biobank
 This uses COVID-19 testing and mortality data released on the 13/02/2021
 
@@ -76,11 +76,11 @@ replace covid_death = 1 if covid_death==2
 replace covid_death_test = 0 if covid_death_test==. & covid_death_suspect!=1
 replace covid_death_suspect = 0 if covid_death_suspect==. & covid_death_test!=1
 
-lab def covid_death 0 "Alive" 1 "Covid death", modify
+lab def covid_death 0 "Alive or non-covid death" 1 "Covid death", modify
 lab val covid_death covid_death
 lab val covid_death_test covid_death
 lab val covid_death_suspect covid_death 
-lab var covid_death "Alive (all ppts.) vs covid death"
+lab var covid_death "Alive  or non-covid death (all ppts.) vs covid death"
 
 ********************************************************************************
 * Simple variable to stratify by time based on before and after mass testing
@@ -88,7 +88,7 @@ lab var covid_death "Alive (all ppts.) vs covid death"
 * Note this variable is slightly different to the assessed vs non-assessed definitions below as this only looks at test date in the tested
 
 gen mass_test = 0 if first_test < date("20200518", "YMD") & first_test!=.
-replace mass_test = 1 if first_test >= date("20200518", "YMD") & first_test!=. & mass_test==.
+replace mass_test = 1 if first_test >= date("20200518", "YMD") & first_test!=.
 lab var mass_test "First Covid test before or after mass testing in tested ppts."
 lab def mass_test 0 "Pre mass testing" 1 "Post mass testing", modify
 lab val mass_test mass_test
@@ -106,14 +106,14 @@ lab val mass_test mass_test
 gen test_phase1 = 1 if covid_test==1 & first_test < date("20200518", "YMD")
 replace test_phase1 = 0 if test_phase1==. 
 lab var test_phase1 "Non-tested vs first Covid test before mass testing "
-lab def test_phase1 0 "No test pre-mass testing" 1 "Tested pre-mass testing", modify
+lab def test_phase1 0 "No test pre-mass testing" 1 "First tested pre-mass testing", modify
 lab val test_phase1 test_phase1
 
 * Post mass testing
 gen test_phase2 = 1 if covid_test==1 & first_test >= date("20200518", "YMD") 
 replace test_phase2 = 0 if test_phase2==. & test_phase1!=1
 lab var test_phase2 "Non-tested vs first Covid test after mass testing "
-lab def test_phase2 0 "No test post-mass testing" 1 "Tested post-mass testing", modify
+lab def test_phase2 0 "No test for COVID-19'" 1 "First test during mass testing", modify
 lab val test_phase2 test_phase2
 
 ********************************************************************************
