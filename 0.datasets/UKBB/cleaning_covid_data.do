@@ -87,6 +87,8 @@ lab var covid_test "Covid test taken"
 lab def covid_test 0 "No covid test" 1 "Covid test taken"
 lab val covid_test covid_test
 
+rename eid n_eid 
+
 save "$resDir/data/COVIDITY/UKBB/covid_test_202103.dta", replace
 
 *Death data
