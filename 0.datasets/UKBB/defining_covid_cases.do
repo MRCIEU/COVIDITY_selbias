@@ -96,9 +96,14 @@ gen covid_death_phase2 = 1 if covid_death==1 &  date_of_death >= date("20200518"
 
 
 * generate covid variables for phase 1 period
-do generate_data_for_phase.do "phase1" "20200101" "20200518"
+do "$scriptDir/0.datasets/UKBB/generate_data_for_phase.do" "phase1" "20200101" "20200518"
 
 * generate covid variables for phase2 period
-do generate_data_for_phase.do "phase2" "20200518" "20210331"
+do "$scriptDir/0.datasets/UKBB/generate_data_for_phase.do" "phase2" "20200518" "20210331"
 
+local phase1_vars test_phase1 data_phase1 positive_test_nontested_phase1 positive_nontested_phase1 negative_test_nontested_phase1 negative_nontested_phase1 positive_test_pop_phase1 positive_pop_phase1 positive_test_negative_phase1 positive_negative_phase1 death_nonsevere_phase1 death_tested_phase1 death_negative_phase1 death_population_phase1
+local phase2_vars test_phase2 data_phase2 positive_test_nontested_phase2 positive_nontested_phase2 negative_test_nontested_phase2 negative_nontested_phase2 positive_test_pop_phase2 positive_pop_phase2 positive_test_negative_phase2 positive_negative_phase2 death_nonsevere_phase2 death_tested_phase2 death_negative_phase2 death_population_phase2
 
+foreach var of varlist `phase1_vars' `phase2_vars' {
+	tab `var'
+}
