@@ -14,10 +14,12 @@ local phase = "`1'"
 local startDate = "`2'"
 local endDate = "`3'"
 
-
+di "`phase'"
+di "`startDate'"
+di "`endDate'"
 
 /*
-We create 6 variables based on pre/post mass testing. Only cases are defined here. Controls and variable labels are assigned in the script below.
+We create 6 variables based on COVID-19 testing and result. Only cases are defined here. Controls and variable labels are assigned in the script below.
 
 These variables are the main variables used to define the different case/control definitions in the script and are called on throughout
 */
@@ -25,15 +27,15 @@ These variables are the main variables used to define the different case/control
 * Create case definition variables that will be populated in the loops below
 * variables with "test" in the name refer to those based on test data only
 * Variables with data in the name, refer to those based both on test data and mortality stats
-capture drop test_phase1 positive_test_phase1 negative_test_phase1
-gen test_phase1=.
-gen positive_test_phase1=.
-gen negative_test_phase1=.
+capture drop test_`phase' positive_test_`phase' negative_test_`phase'
+gen test_`phase'=.
+gen positive_test_`phase'=.
+gen negative_test_`phase'=.
 
-capture drop data_phase1 positive_phase1 negative_phase1
-gen data_phase1=.
-gen positive_phase1=.
-gen negative_phase1=.
+capture drop data_`phase' positive_`phase' negative_`phase'
+gen data_`phase'=.
+gen positive_`phase'=.
+gen negative_`phase'=.
 
 * Loop to assign participants to have a covid test, and a positive covid test, in the pre/post mass testing periods
 * Participants can have multiple covid tests and therefore, can have a (positive) test in both periods. However participants can only die once, so if they have a covid death in phase 1, they can't also have a covid death in phase 2
@@ -41,22 +43,22 @@ gen negative_phase1=.
 forval i = 1/54 {
 
 	* COVID test in phase
-	replace test_phase1 = 1 if test_date_`i' >= date("`startDate'", "DMY") & test_date_`i' < date("`endDate'", "DMY") & test_date_`i'!=. & test_phase1==.
+	replace test_`phase' = 1 if test_date_`i' >= date("`startDate'", "YMD") & test_date_`i' < date("`endDate'", "YMD") & test_date_`i'!=. & test_`phase'==.
 
 	* COVID test or covid death in phase
-	replace data_phase1 = 1 if test_phase1==1 | covid_death_phase1==1 & data_phase1==.
-	
+	replace data_`phase' = 1 if test_`phase'==1 | covid_death_`phase'==1 & data_`phase'==.
+
 	* Covid positive in phase
-	replace positive_test_phase1 = 1 if test_date_`i' >= date("`startDate'", "DMY") & test_date_`i' < date("`endDate'", "DMY") & test_date_`i'!=. & positive_test_phase1==. & covid_test_result==1
+	replace positive_test_`phase' = 1 if test_date_`i' >= date("`startDate'", "YMD") & test_date_`i' < date("`endDate'", "YMD") & test_date_`i'!=. & positive_test_`phase'==. & covid_test_result==1
 
 	* Covid positive or covid death in phase
-	replace positive_phase1 =1 if positive_test_phase1==1 | covid_death_phase1==1 & positive_phase1==.
+	replace positive_`phase' =1 if positive_test_`phase'==1 | covid_death_`phase'==1 & positive_`phase'==.
 	
 	* Covid negative in phase
-	replace negative_test_phase1 = 1 if test_date_`i' >= date("`startDate'", "DMY") & test_date_`i' < date("`endDate'", "DMY") & test_date_`i'!=. & negative_test_phase1==. & covid_test_result==0
+	replace negative_test_`phase' = 1 if test_date_`i' >= date("`startDate'", "YMD") & test_date_`i' < date("`endDate'", "YMD") & test_date_`i'!=. & negative_test_`phase'==. & covid_test_result==0
 
 	* Covid negative excluding deaths in phase
-	replace negative_phase1 = 1 if negative_test_phase1==1 & covid_death_phase1!=1 & negative_phase1==.
+	replace negative_`phase' = 1 if negative_test_`phase'==1 & covid_death_`phase'!=1 & negative_`phase'==.
 	
 }
 
@@ -77,24 +79,22 @@ Setting the control (not assessed) group to zero, based on the case defintion de
 * Variables for having test data for COVID stratified by testing period
 * Only defined based on tests, not on deaths 
 
-* Pre-mass testing
-replace test_phase1 = 0 if test_phase1==. 
+replace test_`phase' = 0 if test_`phase'==. 
 
-lab var test_phase1 "Non-tested vs Covid test before mass testing "
-lab def test_phase1 0 "No test pre-mass testing" 1 "Test pre-mass testing", modify
-lab val test_phase1 test_phase1
+lab var test_`phase' "Non-tested vs Covid test before `phase'  "
+lab def test_`phase' 0 "No test `phase' " 1 "Test `phase'", modify
+lab val test_`phase' test_`phase'
 
 
 ********************************************************************************
-* Variables for having test data for COVID stratified by testing period
+* Variables for having test data for COVID stratified by  period
 * Defined based on date of first test or date of death
 
-* Pre-mass testing
-replace data_phase1 = 0 if data_phase1==. 
+replace data_`phase' = 0 if data_`phase'==. 
 
-lab var data_phase1 "Non-tested vs Covid test/death before mass testing "
-lab def data_phase1 0 "No test or death pre-mass testing" 1 "Tested/died pre-mass testing", modify
-lab val data_phase1 data_phase1 
+lab var data_`phase' "Non-tested vs Covid test/death before `phase' "
+lab def data_`phase' 0 "No test or death `phase'" 1 "Tested/died `phase'", modify
+lab val data_`phase' data_`phase' 
 
 
 					* COVID-19 INFECTION/SUSCPETIBILITY *
@@ -112,13 +112,12 @@ Setting the control (not assessed) group to zero, based on the case defintion de
 * Case = anyone with a positive PHE COVID-19 test (not considering deaths) as defined by positive_test_phase* in the loop above
 * Control = anyone without a COVID-19 test in the relevant test period defined as anyone with no covid test in test_phase* defined previously
 
-* Pre-mass testing
-gen positive_test_nontested_phase1 = 1 if positive_test_phase1==1
-replace positive_test_nontested_phase1 = 0 if test_phase1==0
+gen positive_test_nontested_`phase' = 1 if positive_test_`phase'==1
+replace positive_test_nontested_`phase' = 0 if test_`phase'==0
 
-lab def positive_test_nontested_phase1 0 "No test pre-mass testing" 1 "Covid positive confirmed via test pre-mass testing", modify
-lab val positive_test_nontested_phase1 positive_test_nontested_phase1
-lab var positive_test_nontested_phase1 "Non-tested vs Covid positive confirmed via test pre-mass testing"
+lab def positive_test_nontested_`phase' 0 "No test `phase'" 1 "Covid positive confirmed via test `phase'", modify
+lab val positive_test_nontested_`phase' positive_test_nontested_`phase'
+lab var positive_test_nontested_`phase' "Non-tested vs Covid positive confirmed via test `phase'"
 
 
 ********************************************************************************
@@ -127,13 +126,12 @@ lab var positive_test_nontested_phase1 "Non-tested vs Covid positive confirmed v
 * Case = anyone with a positive PHE COVID-19 test or had a COVID-19 death as defined by positive_phase* in the loop above
 * Control = anyone without a COVID-19 test/death in the relevant test period defined as anyone with no covid test in data_phase* defined previously
 
-* Pre-mass testing
-gen positive_nontested_phase1 = 1 if positive_phase1==1 
-replace positive_nontested_phase1 = 0 if data_phase1==0
+gen positive_nontested_`phase' = 1 if positive_`phase'==1 
+replace positive_nontested_`phase' = 0 if data_`phase'==0
 
-lab def positive_nontested_phase1 0 "No test pre-mass testing" 1 "Covid positive test/death pre-mass testing", modify
-lab val positive_nontested_phase1 positive_nontested_phase1
-lab var positive_nontested_phase1 "Non-tested vs Covid positive test/death pre-mass testing"
+lab def positive_nontested_`phase' 0 "No test " 1 "Covid positive test/death `phase'", modify
+lab val positive_nontested_`phase' positive_nontested_`phase'
+lab var positive_nontested_`phase' "Non-tested vs Covid positive test/death `phase'"
 
 
 ********************************************************************************
@@ -144,13 +142,13 @@ lab var positive_nontested_phase1 "Non-tested vs Covid positive test/death pre-m
 * Case = anyone with a negative PHE COVID-19 test as defined by negative_test_phase* in the loop above
 * Control = anyone without a COVID-19 test in the relevant test period (not considering deaths) defined as anyone with no covid test in test_phase* defined previously
 
-* Pre-mass testing
-gen negative_test_nontested_phase1 = 1 if negative_test_phase1==1
-replace negative_test_nontested_phase1 = 0 if test_phase1==0
 
-lab def negative_test_nontested_phase1 0 "No test pre-mass testing" 1 "Covid negative confirmed via test pre-mass testing", modify
-lab val negative_test_nontested_phase1 negative_test_nontested_phase1
-lab var negative_test_nontested_phase1 "Non-tested vs Covid negative confirmed via test pre-mass testing"
+gen negative_test_nontested_`phase' = 1 if negative_test_`phase'==1
+replace negative_test_nontested_`phase' = 0 if test_`phase'==0
+
+lab def negative_test_nontested_`phase' 0 "No test `phase'" 1 "Covid negative confirmed via test `phase'", modify
+lab val negative_test_nontested_`phase' negative_test_nontested_`phase'
+lab var negative_test_nontested_`phase' "Non-tested vs Covid negative confirmed via test `phase'"
 
 ********************************************************************************
 
@@ -159,13 +157,12 @@ lab var negative_test_nontested_phase1 "Non-tested vs Covid negative confirmed v
 * Control = anyone without a COVID-19 test/death in the relevant test period
 * COVID-19 test positive participants, or those with a COVID-19 death are set to missing
 
-* Pre-mass testing
-gen negative_nontested_phase1 = 1 if negative_phase1==1 
-replace negative_nontested_phase1 = 0 if data_phase1==0
+gen negative_nontested_`phase' = 1 if negative_`phase'==1 
+replace negative_nontested_`phase' = 0 if data_`phase'==0
 
-lab def negative_nontested_phase1 0 "No test/death pre-mass testing" 1 "Covid negative pre-mass testing", modify
-lab val negative_nontested_phase1 negative_nontested_phase1
-lab var negative_nontested_phase1 "Non-tested vs Covid negative pre-mass testing"
+lab def negative_nontested_`phase' 0 "No test/death `phase'" 1 "Covid negative `phase'", modify
+lab val negative_nontested_`phase' negative_nontested_`phase'
+lab var negative_nontested_`phase' "Non-tested vs Covid negative `phase'"
 
 
 ********************************************************************************
@@ -177,13 +174,12 @@ lab var negative_nontested_phase1 "Non-tested vs Covid negative pre-mass testing
 * COVID negative is defined as no test or test negative
 * This variable is based on the *date of first positive test* for stratifying on time
 
-* Pre mass testing period
-gen positive_test_pop_phase1 = 1 if positive_test_phase1==1
-replace positive_test_pop_phase1 = 0 if positive_test_phase1==. 
+gen positive_test_pop_`phase' = 1 if positive_test_`phase'==1
+replace positive_test_pop_`phase' = 0 if positive_test_`phase'==. 
 
-lab def positive_test_pop_phase1 0 "No test/test negative" 1 "Covid test positive", modify
-lab val positive_test_pop_phase1 positive_test_pop_phase1
-lab var positive_test_pop_phase1 "all ppts. (inc -ive test) vs Covid positive confirmed via test in pre-mass testing"
+lab def positive_test_pop_`phase' 0 "No test/test negative" 1 "Covid test positive", modify
+lab val positive_test_pop_`phase' positive_test_pop_`phase'
+lab var positive_test_pop_`phase' "all ppts. (inc -ive test) vs Covid positive confirmed via test in `phase' "
 
 
 * This variable does not include any mortality data. Therefore, participants could have a death of U07.1 recorded (COVID diagnosed via test) and be classed as "untested" if we do not have their test data/results
@@ -195,13 +191,13 @@ lab var positive_test_pop_phase1 "all ppts. (inc -ive test) vs Covid positive co
 * COVID negative is defined as no test or test negative
 * This variable is based on the date of first positive test, or date of death, for stratifying on time
 
-* Pre mass testing period
-gen positive_pop_phase1 = 1 if positive_phase1==1 
-replace positive_pop_phase1 = 0 if positive_phase1==.
 
-lab def positive_pop_phase1 0 "No test/test negative" 1 "Covid test/death positive", modify
-lab val positive_pop_phase1 positive_pop_phase1
-lab var positive_pop_phase1 "all ppts. (inc -ive test) vs Covid positive test/death pre-mass testing"
+gen positive_pop_`phase' = 1 if positive_`phase'==1 
+replace positive_pop_`phase' = 0 if positive_`phase'==.
+
+lab def positive_pop_`phase' 0 "No test/test negative" 1 "Covid test/death positive", modify
+lab val positive_pop_`phase' positive_pop_`phase'
+lab var positive_pop_`phase' "all ppts. (inc -ive test) vs Covid positive test/death `phase' "
 
 
 ********************************************************************************
@@ -212,28 +208,26 @@ lab var positive_pop_phase1 "all ppts. (inc -ive test) vs Covid positive test/de
 
 * Variable for Covid positive participants vs those who have tested negative, i.e., excluding participants who have never received a test
 * This variables does not include COVID-19 deaths without a COVID-19 test as a case
-* Note that an individual can be a control in phase 1, if their first COVID-19 test was carried out pre-mass testing, but be a case in phase 2 if their first *positive* COVID-19 test was carried out post mass-testing (N=249)
 
-gen positive_test_negative_phase1 = 1 if positive_test_phase1==1
-replace positive_test_negative_phase1 = 0 if negative_test_phase1==1
+gen positive_test_negative_`phase' = 1 if positive_test_`phase'==1
+replace positive_test_negative_`phase' = 0 if negative_test_`phase'==1
 
-lab def positive_test_negative_phase1 0 "Test negative" 1 "Test positive", modify
-lab val positive_test_negative_phase1 positive_test_negative_phase1
-lab var positive_test_negative_phase1 "Test negative (ref) vs test positive pre-mass testing"
+lab def positive_test_negative_`phase' 0 "Test negative" 1 "Test positive", modify
+lab val positive_test_negative_`phase' positive_test_negative_`phase'
+lab var positive_test_negative_`phase' "Test negative (ref) vs test positive `phase'"
 
 ********************************************************************************
 
 * Variable for Covid positive participants vs those who have tested negative, i.e., excluding participants who have never received a test
 * This variables does not include COVID-19 deaths without a COVID-19 test as a case
-* Note that an individual can be a control in phase 1, if their first COVID-19 test was carried out pre-mass testing, but be a case in phase 2 if their first *positive* COVID-19 test was carried out post mass-testing (N=249)
 
-gen positive_negative_phase1 = 1 if positive_phase1==1 
-replace positive_negative_phase1 = 0 if negative_phase1==1
+gen positive_negative_`phase' = 1 if positive_`phase'==1 
+replace positive_negative_`phase' = 0 if negative_`phase'==1
 
 
-lab def positive_negative_phase1 0 "Test negative" 1 "Test/death positive", modify
-lab val positive_negative_phase1 positive_negative_phase1
-lab var positive_negative_phase1 "Test negative (ref) vs test/death positive pre-mass testing"
+lab def positive_negative_`phase' 0 "Test negative" 1 "Test/death positive", modify
+lab val positive_negative_`phase' positive_negative_`phase'
+lab var positive_negative_`phase' "Test negative (ref) vs test/death positive `phase' "
 
 ********************************************************************************
 ********************************************************************************
@@ -248,11 +242,12 @@ lab var positive_negative_phase1 "Test negative (ref) vs test/death positive pre
 * Death = any covid death, either confirmed or suspected
 * non-severe covid = positive test taken that didn't result in death
 
-gen death_nonsevere_phase1 = 1 if covid_death_phase1==1
-replace death_nonsevere_phase1 = 0 if positive_phase1==1 & death_nonsevere_phase1==.
-lab var death_nonsevere_phase1 "Non-severe covid  vs covid death pre-mass testing"
-lab def death_nonsevere_phase1 0 "Covid" 1 "Covid death", modify
-lab val death_nonsevere_phase1 death_nonsevere_phase1
+gen death_nonsevere_`phase' = 1 if covid_death_`phase'==1
+replace death_nonsevere_`phase' = 0 if positive_`phase'==1 & death_nonsevere_`phase'==.
+
+lab var death_nonsevere_`phase' "Non-severe covid  vs covid death `phase' "
+lab def death_nonsevere_`phase' 0 "Covid" 1 "Covid death", modify
+lab val death_nonsevere_`phase' death_nonsevere_`phase'
 
 
 ********************************************************************************
@@ -263,11 +258,12 @@ lab val death_nonsevere_phase1 death_nonsevere_phase1
 * Death = any covid death, either confirmed or suspected
 * Control = COVID-19 test, either positive or negative
 
-gen death_tested_phase1 = 1 if covid_death_phase1==1
-replace death_tested_phase1 = 0 if death_tested_phase1==. & data_phase1==1
-lab var death_tested_phase1 "Tested (+ive and -ive) vs covid death pre mass testing"
-lab def death_tested_phase1 0 "Tested" 1 "Covid death"
-lab val death_tested_phase1 death_tested_phase1
+gen death_tested_`phase' = 1 if covid_death_`phase'==1
+replace death_tested_`phase' = 0 if death_tested_`phase'==. & data_`phase'==1
+
+lab var death_tested_`phase' "Tested (+ive and -ive) vs covid death `phase' "
+lab def death_tested_`phase' 0 "Tested" 1 "Covid death", modify
+lab val death_tested_`phase' death_tested_`phase'
 
 
 ********************************************************************************
@@ -278,11 +274,12 @@ lab val death_tested_phase1 death_tested_phase1
 * Death = any covid death, either confirmed or suspected
 * Control = negative test taken that didn't result in death
 
-gen death_negative_phase1 = 1 if covid_death_phase1==1
-replace death_negative_phase1 = 0 if positive_negative_phase1==0 & death_negative_phase1==.
-lab var death_negative_phase1 "Test negative  vs covid death pre-mass testing"
-lab def death_negative_phase1 0 "Covid test negative" 1 "Covid death", modify
-lab val death_negative_phase1 death_negative_phase1
+gen death_negative_`phase' = 1 if covid_death_`phase'==1
+replace death_negative_`phase' = 0 if positive_negative_`phase'==0 & death_negative_`phase'==.
+
+lab var death_negative_`phase' "Test negative  vs covid death `phase' "
+lab def death_negative_`phase' 0 "Covid test negative" 1 "Covid death", modify
+lab val death_negative_`phase' death_negative_`phase'
 
 
 ********************************************************************************
@@ -294,22 +291,25 @@ lab val death_negative_phase1 death_negative_phase1
 * Death = any covid death, either confirmed or suspected
 * Control = all participants without a covid death
 
-gen death_population_phase1 = 1 if covid_death_phase1==1
-replace death_population_phase1 = 0 if death_population_phase1==.
+gen death_population_`phase' = 1 if covid_death_`phase'==1
+replace death_population_`phase' = 0 if death_population_`phase'==.
 
-lab var death_population_phase1 "No covid death  vs covid death pre-mass testing"
-lab def death_population_phase1 0 "No covid death" 1 "Covid death", modify
-lab val death_population_phase1 death_population_phase1
+lab var death_population_`phase' "No covid death  vs covid death `phase' "
+lab def death_population_`phase' 0 "No covid death" 1 "Covid death", modify
+lab val death_population_`phase' death_population_`phase'
 
+********************************************************************************
+			* Set COVID-19 phase1 deaths to missing when using deaths*
+********************************************************************************
+
+foreach var in data_`phase' positive_nontested_`phase' negative_nontested_`phase' positive_pop_`phase' positive_negative_`phase' death_nonsevere_`phase' death_tested_`phase' death_negative_`phase' death_population_`phase' {
+	
+	replace `var' = . if "`phase'"=="phase2" & covid_death_phase1==1
+}
 
 ********************************************************************************
 									* SAVE *
 ********************************************************************************
-foreach var of varlist test_phase1 test_phase2 data_phase1 data_phase2 positive_test_nontested_phase1 positive_test_nontested_phase2 positive_nontested_phase1 positive_nontested_phase2 negative_test_nontested_phase1 negative_test_nontested_phase2 negative_nontested_phase1 negative_nontested_phase2 positive_test_pop_phase1 positive_test_pop_phase2 positive_pop_phase1 positive_pop_phase2 positive_test_negative_phase1 positive_test_negative_phase2 positive_negative_phase1 positive_negative_phase2 death_nonsevere_phase1 death_nonsevere_phase2 death_tested_phase1 death_tested_phase2 death_negative_phase1 death_negative_phase2 death_population_phase1 death_population_phase2 {
-	
-	tab `var'
-	
-}
 
 save "covidity_data_`phase'-20210330.dta", replace
 
