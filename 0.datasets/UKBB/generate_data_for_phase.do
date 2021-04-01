@@ -52,13 +52,13 @@ foreach thistestdate in `testdatevars' {
 	replace test_`phase' = 1 if `thistestdate' >= date("`startDate'", "YMD") & `thistestdate' < date("`endDate'", "YMD") & `thistestdate'!=. & test_`phase'==.
 
 	* COVID test or covid death in phase
-	replace data_`phase' = 1 if test_`phase'==1 | covid_death_`phase'==1 & data_`phase'==.
+	replace data_`phase' = 1 if (test_`phase'==1 | covid_death_`phase'==1) & data_`phase'==.
 
 	* Covid positive in phase
 	replace positive_test_`phase' = 1 if `thistestdate' >= date("`startDate'", "YMD") & `thistestdate' < date("`endDate'", "YMD") & `thistestdate'!=. & positive_test_`phase'==. & covid_test_result==1
 
 	* Covid positive or covid death in phase
-	replace positive_`phase' =1 if positive_test_`phase'==1 | covid_death_`phase'==1 & positive_`phase'==.
+	replace positive_`phase' =1 if (positive_test_`phase'==1 | covid_death_`phase'==1) & positive_`phase'==.
 	
 	* Covid negative in phase
 	replace negative_test_`phase' = 1 if `thistestdate' >= date("`startDate'", "YMD") & `thistestdate' < date("`endDate'", "YMD") & `thistestdate'!=. & negative_test_`phase'==. & covid_test_result==0
