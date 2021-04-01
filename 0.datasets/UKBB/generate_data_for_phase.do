@@ -40,22 +40,28 @@ gen negative_`phase'=.
 * Loop to assign participants to have a covid test, and a positive covid test, in the pre/post mass testing periods
 * Participants can have multiple covid tests and therefore, can have a (positive) test in both periods. However participants can only die once, so if they have a covid death in phase 1, they can't also have a covid death in phase 2
  
-forval i = 1/54 {
+*  ssc install findname
+
+findname test_date_*
+local testdatevars = "`r(varlist)'"
+foreach thistestdate in `testdatevars' { 
+
+	di "`thistestdate'"
 
 	* COVID test in phase
-	replace test_`phase' = 1 if test_date_`i' >= date("`startDate'", "YMD") & test_date_`i' < date("`endDate'", "YMD") & test_date_`i'!=. & test_`phase'==.
+	replace test_`phase' = 1 if `thistestdate' >= date("`startDate'", "YMD") & `thistestdate' < date("`endDate'", "YMD") & `thistestdate'!=. & test_`phase'==.
 
 	* COVID test or covid death in phase
 	replace data_`phase' = 1 if test_`phase'==1 | covid_death_`phase'==1 & data_`phase'==.
 
 	* Covid positive in phase
-	replace positive_test_`phase' = 1 if test_date_`i' >= date("`startDate'", "YMD") & test_date_`i' < date("`endDate'", "YMD") & test_date_`i'!=. & positive_test_`phase'==. & covid_test_result==1
+	replace positive_test_`phase' = 1 if `thistestdate' >= date("`startDate'", "YMD") & `thistestdate' < date("`endDate'", "YMD") & `thistestdate'!=. & positive_test_`phase'==. & covid_test_result==1
 
 	* Covid positive or covid death in phase
 	replace positive_`phase' =1 if positive_test_`phase'==1 | covid_death_`phase'==1 & positive_`phase'==.
 	
 	* Covid negative in phase
-	replace negative_test_`phase' = 1 if test_date_`i' >= date("`startDate'", "YMD") & test_date_`i' < date("`endDate'", "YMD") & test_date_`i'!=. & negative_test_`phase'==. & covid_test_result==0
+	replace negative_test_`phase' = 1 if `thistestdate' >= date("`startDate'", "YMD") & `thistestdate' < date("`endDate'", "YMD") & `thistestdate'!=. & negative_test_`phase'==. & covid_test_result==0
 
 	* Covid negative excluding deaths in phase
 	replace negative_`phase' = 1 if negative_test_`phase'==1 & covid_death_`phase'!=1 & negative_`phase'==.
