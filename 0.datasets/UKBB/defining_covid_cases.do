@@ -10,7 +10,6 @@ At the time of writing, follow up was until the 1st february
 
 */
 
-
 * Use the data containing variables which will be used as covariates for analysis
 * This dataset has withdrawals removed, but no other exclusions have been applied. These are applied in this script
 use "$resDir/data/COVIDITY/UKBB/analysis_variables_202103.dta", clear
@@ -22,9 +21,6 @@ cd "$resDir/data/COVIDITY/UKBB"
 /* Remove for pregnancy */
 drop if n_3140_0_0 ==1
 drop if n_3140_0_0 ==2
-
-** Exclude ppts if already died of non-covid causes until the 1st january 2020 - Anyone with a pre-pandemic death cannot by definition be a covid case, but anyone who dies during the pandemic can be a case. May want to revise the exclusion date
-drop if date_of_death < date("20200101", "YMD")
 
 * Restrict to English participants - cannot have a covid test if they are from Wales/Scotland/NI 
 
@@ -107,3 +103,5 @@ local phase2_vars test_phase2 data_phase2 positive_test_nontested_phase2 positiv
 foreach var of varlist `phase1_vars' `phase2_vars' {
 	tab `var'
 }
+
+save "covidity_data_202104.dta", replace
