@@ -239,3 +239,6 @@ foreach var in age sd_age bmi_0_0 sd_bmi tdi_0_0 sd_tdi {
 }	
 
 
+* Add variable levels
+putexcel set 20210409_UKBB_simulations_infection_`sampleDef', sheet(prevalence_and_distributions) modify
+putexcel C2="Female" C3="Male" C4="Not tested/test negative for COVID-19 before mass testing" C5="Tested positive for COVID-19 before mass testing" C6="Alive before mass testing" C7="Death from COVID-19 before mass testing" C8="Covid positive before mass testing not resulting in death" C9="Death from COVID-19 before mass testing" C10="Non-smoker" C11="Former smoker" C12="Current smoker" C13="GCSE/O levels or less" C14="AS or A levels" C15=" Vocational qualification" C16="Degree or higher" C17="1 - Least deprived" C18="2" C19="3" C20="4" C21="5 - Most deprived"
