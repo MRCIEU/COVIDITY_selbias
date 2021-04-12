@@ -87,7 +87,7 @@ replace death_`phase' = 1 if (test_`phase'==1 | covid_death_`phase'==1)
 replace positive_death_`phase' =1 if (positive_test_`phase'==1 | covid_death_`phase'==1)
 
 * Covid negative excluding deaths in phase
-replace negative_death_`phase' = 1 if negative_test_`phase'==1 & covid_death_`phase'!=1 & positive_death_`phase'==1
+replace negative_death_`phase' = 1 if negative_test_`phase'==1 & positive_death_`phase'!=1
 
 
 
