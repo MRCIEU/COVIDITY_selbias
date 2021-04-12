@@ -313,7 +313,7 @@ lab val death_tested_`phase' death_tested_`phase'
 
 capture drop death_negative_`phase'
 gen death_negative_`phase' = 1 if covid_death_`phase'==1
-replace death_negative_`phase' = 0 if positive_death_negative_`phase'==0 & death_negative_`phase'==.
+replace death_negative_`phase' = 0 if negative_death_`phase'==1 & death_negative_`phase'==.
 
 lab var death_negative_`phase' "Test negative  vs covid death `phase' "
 lab def death_negative_`phase' 0 "Covid test negative" 1 "Covid death", modify
