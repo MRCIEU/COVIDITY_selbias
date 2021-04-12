@@ -309,7 +309,7 @@ lab val death_tested_`phase' death_tested_`phase'
 
 * Define severe covid through deaths 
 * Death = any covid death, either confirmed or suspected
-* Control = negative test taken that didn't result in death
+* Control = negative test taken and no COVID death in phase
 
 capture drop death_negative_`phase'
 gen death_negative_`phase' = 1 if covid_death_`phase'==1
