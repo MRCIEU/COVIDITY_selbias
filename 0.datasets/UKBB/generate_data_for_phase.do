@@ -111,7 +111,7 @@ Setting the control (not assessed) group to zero, based on the case defintion de
 
 replace test_`phase' = 0 if test_`phase'==. 
 
-lab var test_`phase' "Non-tested vs Covid test before `phase'  "
+lab var test_`phase' "Non-tested vs Covid test during `phase'  "
 lab def test_`phase' 0 "No test `phase' " 1 "Test `phase'", modify
 lab val test_`phase' test_`phase'
 
@@ -122,7 +122,7 @@ lab val test_`phase' test_`phase'
 
 replace death_`phase' = 0 if death_`phase'==. 
 
-lab var death_`phase' "Non-tested vs Covid test/death before `phase' "
+lab var death_`phase' "Non-tested vs Covid test/death during `phase' "
 lab def death_`phase' 0 "No test or death `phase'" 1 "Tested/died `phase'", modify
 lab val death_`phase' death_`phase' 
 
@@ -240,7 +240,7 @@ lab var positive_death_pop_`phase' "all ppts. (inc -ive test) vs Covid positive 
 							* Case vs Controls (tested) *
 ********************************************************************************
 
-* Variable for Covid positive participants vs those who have tested negative, i.e., excluding participants who have never received a test
+* Variable for Covid positive participants vs those who have tested negative, i.e., excluding participants who didn't receive a test in this phase
 * This variables does not include COVID-19 deaths without a COVID-19 test as a case
 
 capture drop positive_test_negative_`phase'
@@ -253,7 +253,7 @@ lab var positive_test_negative_`phase' "Test negative (ref) vs test positive `ph
 
 ********************************************************************************
 
-* Variable for Covid positive participants vs those who have tested negative, i.e., excluding participants who have never received a test
+* Variable for Covid positive participants vs those who have tested negative, i.e., excluding participants who didn't receive a test in this phase
 * This variables does not include COVID-19 deaths without a COVID-19 test as a case
 
 capture drop positive_death_negative_`phase'
