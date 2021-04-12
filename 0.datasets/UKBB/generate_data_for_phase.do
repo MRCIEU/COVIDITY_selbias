@@ -60,31 +60,37 @@ foreach thistestdate in `testdatevars' {
 	* COVID test in phase
 	replace test_`phase' = 1 if `thistestdate' >= date("`startDate'", "YMD") & `thistestdate' < date("`endDate'", "YMD") & `thistestdate'!=. & test_`phase'==.
 
-	* COVID test or covid death in phase
-	replace death_`phase' = 1 if (test_`phase'==1 | covid_death_`phase'==1) & death_`phase'==.
-
 	* Covid positive in phase
 	* get respective test result
 	local i = substr( "`thistestdate'", 11,.)	
 	di `i'
+
 	* Set positive cases to 1
 	replace positive_test_`phase' = 1 if `thistestdate' >= date("`startDate'", "YMD") & `thistestdate' < date("`endDate'", "YMD") & `thistestdate'!=. & positive_test_`phase'==. & result_`i'==1
 
-	* Covid positive or covid death in phase
-	replace positive_death_`phase' =1 if (positive_test_`phase'==1 | covid_death_`phase'==1) & positive_death_`phase'==.
-	
 	* Covid negative in phase
 	replace negative_test_`phase' = 1 if `thistestdate' >= date("`startDate'", "YMD") & `thistestdate' < date("`endDate'", "YMD") & `thistestdate'!=. & negative_test_`phase'==. & result_`i'==0 
 
 	* Set ppts to missing if they have a positive COVID-19 test (as well as negative) so they are only counted once per phase
 	replace negative_test_`phase'=. if positive_test_`phase'==1
 
-	* Covid negative excluding deaths in phase
-	replace negative_death_`phase' = 1 if negative_test_`phase'==1 & covid_death_`phase'!=1 & negative_death_`phase'==.
-	
-	* Set ppts to missing if they have a positive COVID-19 test (as well as negative) so they are only counted once per phase
-	replace negative_death_`phase'=. if positive_death_`phase'==1	
 }
+
+
+**
+** set tested, positive test and negative test – including both covid test and covid death as covid positive
+
+* COVID test or covid death in phase
+replace death_`phase' = 1 if (test_`phase'==1 | covid_death_`phase'==1)
+
+* Covid positive or covid death in phase
+replace positive_death_`phase' =1 if (positive_test_`phase'==1 | covid_death_`phase'==1)
+
+* Covid negative excluding deaths in phase
+replace negative_death_`phase' = 1 if negative_test_`phase'==1 & covid_death_`phase'!=1 & positive_death_`phase'==1
+
+
+
 
 ********************************************************************************
 							* Setting control definitions *
