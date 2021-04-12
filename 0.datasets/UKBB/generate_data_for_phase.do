@@ -19,11 +19,19 @@ di "`endDate'"
 * Exclude participants who died before the start of the phase, either from COVID-19 or non-COVID-19 causes
 *drop if date_of_death!=. & date_of_death < date("`startDate'", "YMD")
 
+
+
+* Set death in phase
+gen covid_death_`phase' = 1 if covid_death==1 & date_of_death >= date("`startDate'", "YMD") & date_of_death < date("`endDate'", "YMD")
+
+
+
 /*
 We create 6 variables based on COVID-19 testing and result. Only cases are defined here. Controls and variable labels are assigned in the script below.
 
 These variables are the main variables used to define the different case/control definitions in the script and are called on throughout
 */
+
 
 * Create case definition variables that will be populated in the loops below
 * variables with "test" in the name refer to those based on test data only
@@ -332,9 +340,12 @@ foreach var in test_`phase' death_`phase' positive_test_nontested_`phase' positi
 	replace `var' = . if date_of_death!=. & date_of_death < date("`startDate'", "YMD")
 }
 
+
 ********************************************************************************
-									* SAVE *
+                                * Define study population for pre/post mass testing *
 ********************************************************************************
 
- save "covidity_data_`phase'-20210407.dta", replace
+gen `phase'_sample = 1 if death_`phase' !=.
+
+
 
