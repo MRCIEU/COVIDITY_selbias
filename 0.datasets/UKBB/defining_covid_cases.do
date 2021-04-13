@@ -82,9 +82,6 @@ lab val covid_death_test covid_death
 lab val covid_death_suspect covid_death 
 lab var covid_death "Alive  or non-covid death (all ppts.) vs covid death"
 
-* Set deaths to pre/post mass testing
-gen covid_death_phase1 = 1 if covid_death==1 &  date_of_death < date("20200518", "YMD")
-gen covid_death_phase2 = 1 if covid_death==1 &  date_of_death >= date("20200518", "YMD")
 
 ********************************************************************************
 						* Setting pre/post mass testing variables *
@@ -105,11 +102,5 @@ foreach var of varlist `phase1_vars' `phase2_vars' {
 	tab `var'
 }
 */
-********************************************************************************
-				* Define study population for pre/post mass testing *
-********************************************************************************
-
-gen phase1_sample = 1 if death_phase1!=.
-gen phase2_sample = 1 if death_phase2!=.
 
 save "covidity_data_202104.dta", replace
