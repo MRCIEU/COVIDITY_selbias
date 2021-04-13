@@ -30,7 +30,7 @@ Two sets of data are created for the simulations:
 keep if phase1_sample==1
 
 * Case definition (1) using test data only
-do "$scriptDir/2.aim2-simulation/UKBB/a-infection/infection_simulation_parameters.do" "tested" "test"
+do "$scriptDir/2.aim2-simulation/UKBB/a-infection/infection_simulation_parameters.do" "tested" "test"  "20210413"
 
 * Case definition (2) using test and death data
-do "$scriptDir/2.aim2-simulation/UKBB/a-infection/infection_simulation_parameters.do" "TestsAndDeath" "death"
+do "$scriptDir/2.aim2-simulation/UKBB/a-infection/infection_simulation_parameters.do" "TestsAndDeath" "death" "20210413"
