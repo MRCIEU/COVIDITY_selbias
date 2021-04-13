@@ -3,7 +3,7 @@
 
 local sampleDef = "`1'"
 local caseDef = "`2'"
-local date = "`date'"
+local date = "`3'"
 
 di "`sampleDef'"
 di "`caseDef'"
