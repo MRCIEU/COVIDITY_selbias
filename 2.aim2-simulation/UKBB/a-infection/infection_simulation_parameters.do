@@ -3,9 +3,11 @@
 
 local sampleDef = "`1'"
 local caseDef = "`2'"
+local date = "`3'"
 
 di "`sampleDef'"
 di "`caseDef'"
+di "`date'"
 
 ********************************************************************************
 * Association of covariates with BMI in all eligible UKBB participants in phase1 (defined by phase1_sample)
@@ -16,7 +18,7 @@ regress sd_bmi i.eduyears_quali i.sex sd_age i.current_smoke sd_tdi
 * Storing and formatting results
 matrix results = r(table)
 matrix results = results[1..6,1..12]
-	putexcel set 20210409_UKBB_simulations_infection_`sampleDef'.xlsx, sheet(bmi_outcome_all) modify
+	putexcel set `date'_UKBB_simulations_infection_`sampleDef'.xlsx, sheet(bmi_outcome_all) modify
 	putexcel A1 = matrix(results), names nformat(number_d2)
 	putexcel A10="F stat" B10=`e(F)'
 	putexcel B1="0b.eduyears - GCSE or less" C1="1.eduyears - AS/A level" D1="3.eduyears - NVQ/vocational quali" E1="4.eduyears - degree or higher" F1="0b.sex - female" G1="1.sex - male" H1="Age (SD)" I1="0b.current_smoke - never smoker" J1="1.current_smoke - former smoker" K1="2.current_smoke - current smoker" L1="TDI (SD)" 
@@ -31,7 +33,7 @@ logistic positive_`caseDef'_negative_phase1 i.eduyears_quali i.sex sd_age i.curr
 * Storing and formatting results
 matrix results = r(table)
 matrix results = results[1..6,1..12]
-	putexcel set 20210409_UKBB_simulations_infection_`sampleDef'.xlsx, sheet(covid_outcome_tested) modify
+	putexcel set `date'_UKBB_simulations_infection_`sampleDef'.xlsx, sheet(covid_outcome_tested) modify
 	putexcel A1 = matrix(results), names nformat(number_d2)
 	putexcel B2="0b.eduyears - GCSE or less" C2="1.eduyears - AS/A level" D2="3.eduyears - NVQ/vocational quali" E2="4.eduyears - degree or higher" F2="0b.sex - female" G2="1.sex - male" H2="Age (SD)" I2="0b.current_smoke - never smoker" J2="1.current_smoke - former smoker" K2="2.current_smoke - current smoker" L2="TDI (SD)" 
 		
@@ -44,21 +46,21 @@ logistic `caseDef'_phase1 sd_bmi i.eduyears_quali i.sex sd_age i.current_smoke s
 * Storing and formatting results
 matrix results = r(table)
 matrix results = results[1..6,1..13]
-	putexcel set 20210409_UKBB_simulations_infection_`sampleDef'.xlsx, sheet(test_outcome_all) modify
+	putexcel set `date'_UKBB_simulations_infection_`sampleDef'.xlsx, sheet(test_outcome_all) modify
 	putexcel A1 = matrix(results), names nformat(number_d2)
 	putexcel B2="BMI (SD)" C2="0b.eduyears - GCSE or less" D2="1.eduyears - AS/A level" E2="3.eduyears - NVQ/vocational quali" F2="4.eduyears - degree or higher" G2="0b.sex - female" H2="1.sex - male" I2="Age (SD)" J2="0b.current_smoke - never smoker" K2="1.current_smoke - former smoker" L2="2.current_smoke - current smoker" M2="TDI (SD)" 
 		
 ********************************************************************************	
 * Prevalence and distribution estimates
 
-putexcel set 20210409_UKBB_simulations_infection_`sampleDef', sheet(prevalence_and_distributions) modify
+putexcel set `date'_UKBB_simulations_infection_`sampleDef', sheet(prevalence_and_distributions) modify
 putexcel A1="Variable" B1="Variable type" C1="Level" D1="Prevalence/mean" E1="percent/SD"	
 
 local x=1
 foreach var in sex `caseDef'_phase1 positive_`caseDef'_pop_phase1 {
 
 	local x=`x'+1	
-	putexcel set 20210409_UKBB_simulations_infection_`sampleDef', sheet(prevalence_and_distributions) modify
+	putexcel set `date'_UKBB_simulations_infection_`sampleDef', sheet(prevalence_and_distributions) modify
 	
 	tab `var', matcell(numbers)
 	
@@ -81,7 +83,7 @@ local x=7
 foreach var in current_smoke {
 	
 	local x=`x'+1	
-	putexcel set 20210409_UKBB_simulations_infection_`sampleDef', sheet(prevalence_and_distributions) modify
+	putexcel set `date'_UKBB_simulations_infection_`sampleDef', sheet(prevalence_and_distributions) modify
 	
 	tab `var', matcell(numbers)
 	
@@ -108,7 +110,7 @@ local x=10
 foreach var in eduyears_quali {
 	
 	local x=`x'+1	
-	putexcel set 20210409_UKBB_simulations_infection_`sampleDef', sheet(prevalence_and_distributions) modify
+	putexcel set `date'_UKBB_simulations_infection_`sampleDef', sheet(prevalence_and_distributions) modify
 	
 	tab `var', matcell(numbers)
 	
@@ -141,7 +143,7 @@ local x=14
 foreach var in tdi_cat {
 	
 	local x=`x'+1	
-	putexcel set 20210409_UKBB_simulations_infection_`sampleDef', sheet(prevalence_and_distributions) modify
+	putexcel set `date'_UKBB_simulations_infection_`sampleDef', sheet(prevalence_and_distributions) modify
 	
 	tab `var', matcell(numbers)
 	
@@ -176,7 +178,7 @@ local x=19
 foreach var in age sd_age bmi_0_0 sd_bmi tdi_0_0 sd_tdi {
 	
 	local x=`x'+1	
-	putexcel set 20210409_UKBB_simulations_infection_`sampleDef', sheet(prevalence_and_distributions) modify
+	putexcel set `date'_UKBB_simulations_infection_`sampleDef', sheet(prevalence_and_distributions) modify
 	
 	summ `var'
 			
@@ -187,5 +189,5 @@ foreach var in age sd_age bmi_0_0 sd_bmi tdi_0_0 sd_tdi {
 }	
 
 * Add variable levels
-putexcel set 20210409_UKBB_simulations_infection_`sampleDef', sheet(prevalence_and_distributions) modify
+putexcel set `date'_UKBB_simulations_infection_`sampleDef', sheet(prevalence_and_distributions) modify
 putexcel C2="Female" C3="Male" C4="Not tested/test negative for COVID-19 before mass testing" C5="Tested for COVID-19 before mass testing" C6="Not tested positive for COVID-19 before mass testing" C7="Tested positive for COVID-19 before mass testing" C8="Non-smoker" C9="Former smoker" C10="Current smoker" C11="GCSE/O levels or less" C12="AS or A levels" C13=" Vocational qualification" C14="Degree or higher" C15="1 - Least deprived" C16="2" C17="3" C18="4" C19="5 - Most deprived"
