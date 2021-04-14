@@ -61,18 +61,15 @@ while `i'<=`nSim' {
 	*regress sd_bmi education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi
 	
 		
+
 	***
-	*** covid risk - 9.393% are tested positive, of those tested
-	*** this assumes the effect of the covariates on covid risk is the same in the non-selected sample as the selected sample
-	*** uses "Covid test result - Any positive test" results from ukb assocs
-	*** 
-	*** the intercept is changed to -2.8 from -2.2579 in the null version, to give the same covid distribution with BMI in this model
+	*** covid risk - 3.16% – from external source
 
 	if ("`bmiEffect'" == "effect") {
-		gen covidRiskPart = log(3)*sd_bmi + -0.3787*education_alevel + 0.0440*education_voc + -0.2748*education_degree + 0.2557*sex_m + -0.2043*sd_age + 0.0507*smoking_previous -0.1405*smoking_current + 0.1682*sd_tdi + -2.796
+		gen covidRiskPart = log(3)*sd_bmi + -0.2221*education_alevel + 0.1172*education_voc + -0.2043*education_degree + 0.2838*sex_m + -0.0702*sd_age + 0.0436*smoking_previous -0.2052*smoking_current + 0.1231*sd_tdi + -4.100
 	}
 	else if ("`bmiEffect'" == "null") {
-		gen covidRiskPart = -0.3787*education_alevel + 0.0440*education_voc + -0.2748*education_degree + 0.2557*sex_m + -0.2043*sd_age + 0.0507*smoking_previous -0.1405*smoking_current + 0.1682*sd_tdi + -2.33
+		gen covidRiskPart = -0.2221*education_alevel + 0.1172*education_voc + -0.2043*education_degree + 0.2838*sex_m + -0.0702*sd_age + 0.0436*smoking_previous -0.2052*smoking_current + 0.1231*sd_tdi + -3.526
 	}
 
 	gen pCovid=exp(covidRiskPart)/(1+exp(covidRiskPart))
@@ -85,17 +82,20 @@ while `i'<=`nSim' {
 	if ("`setup'" == "all") {
 		di "generate selection with all indep vars"
 		if ("`covidSelectOR'" == "2") {
-			gen logitSelectPart = 0.1435*sd_bmi + -0.0799*education_alevel + -0.0265*education_voc + -0.1348*education_degree + 0.1023*sex_m + 0.2273*sd_age + 0.1441*smoking_previous + 0.2977*smoking_current + 0.1190*sd_tdi + log(2)*covid + -3.311
+			gen logitSelectPart = 0.1641*sd_bmi + -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi + log(2)*covid + -3.253
 		}
 		else if ("`covidSelectOR'" == "5") {
-			gen logitSelectPart = 0.1435*sd_bmi + -0.0799*education_alevel + -0.0265*education_voc + -0.1348*education_degree + 0.1023*sex_m + 0.2273*sd_age + 0.1441*smoking_previous + 0.2977*smoking_current + 0.1190*sd_tdi + log(5)*covid + -3.530
+			gen logitSelectPart = 0.1641*sd_bmi + -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi + log(5)*covid + -3.340
 		}
 		else if	("`covidSelectOR'" == "10") {
-			gen logitSelectPart = 0.1435*sd_bmi + -0.0799*education_alevel + -0.0265*education_voc + -0.1348*education_degree + 0.1023*sex_m + 0.2273*sd_age + 0.1441*smoking_previous + 0.2977*smoking_current + 0.1190*sd_tdi + log(10)*covid + -3.785
+			gen logitSelectPart = 0.1641*sd_bmi + -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi + log(10)*covid + -3.441
 		}
 
 	}
-	else if ("`setup'" == "bmi") {
+	else if ("`covidSelectOR'" == "2") {
+		* only run partial versions for main OR=2 option
+	
+	if ("`setup'" == "bmi") {
 		di "generate selection with bmi only"
 		gen logitSelectPart = 0.1435*sd_bmi + -3.311
 	}
@@ -123,7 +123,7 @@ while `i'<=`nSim' {
 		di "Valid setup not specified : `setup'"
 		exit, clear
 	}
-
+	}
 
 	gen pSelect=exp(logitSelectPart)/(1+exp(logitSelectPart))
 	gen selection = runiform() <= pSelect
