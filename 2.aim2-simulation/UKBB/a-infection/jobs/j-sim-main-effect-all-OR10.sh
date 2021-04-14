@@ -6,6 +6,7 @@
 date
 
 cd $PBS_O_WORKDIR
+cd ..
 
 module add apps/stata15
 
