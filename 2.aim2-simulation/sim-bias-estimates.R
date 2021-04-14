@@ -54,7 +54,7 @@ estimatesForSim <- function(bmi_assoc, setup, covidSelectOR) {
 
 	# load in the simulation results
 
-	simres = read.table(paste0("out/sim-main-",bmi_assoc,"-", setup, "-", covidSelectOR, ".csv"), header=1, sep=",")
+	simres = read.table(paste0("out/sim-",bmi_assoc,"-", setup, "-", covidSelectOR, ".csv"), header=1, sep=",")
 	# columns: iter,strata,estimate,lower,upper
 
 
@@ -67,7 +67,7 @@ estimatesForSim <- function(bmi_assoc, setup, covidSelectOR) {
 	
 	# calculate average bias of simulation iterations for each version
 
-	outfile=paste0("out/sim-main-",bmi_assoc, ".csv")
+	outfile=paste0("out/sim-",bmi_assoc, ".csv")
 
 	#print("strata: meanbias, mcSE")
 
@@ -96,12 +96,12 @@ estimatesForSim <- function(bmi_assoc, setup, covidSelectOR) {
 
 cat("OR=2 \n")
 estimatesForSim(bmi_assoc, "all", 2)
-estimatesForSim(bmi_assoc, "bmi", "")
-estimatesForSim(bmi_assoc, "covars", "")
-estimatesForSim(bmi_assoc, "covid", "")
-estimatesForSim(bmi_assoc, "bmi_covars", "")
-estimatesForSim(bmi_assoc, "bmi_covid", "")
-estimatesForSim(bmi_assoc, "covars_covid", "")
+estimatesForSim(bmi_assoc, "bmi", 2)
+estimatesForSim(bmi_assoc, "covars", 2)
+estimatesForSim(bmi_assoc, "covid", 2)
+estimatesForSim(bmi_assoc, "bmi_covars", 2)
+estimatesForSim(bmi_assoc, "bmi_covid", 2)
+estimatesForSim(bmi_assoc, "covars_covid", 2)
 
 cat("OR=5 \n")
 estimatesForSim(bmi_assoc, "all", 5)

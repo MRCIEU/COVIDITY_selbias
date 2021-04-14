@@ -23,7 +23,7 @@ di "`covidSelectOR'"
 
 graph drop _all
 
-insheet using "out/sim-main-`bmi_assoc'-`setup'-`covidSelectOR'.csv"
+insheet using "out/sim-`bmi_assoc'-`setup'-`covidSelectOR'.csv"
 
 
 summ
