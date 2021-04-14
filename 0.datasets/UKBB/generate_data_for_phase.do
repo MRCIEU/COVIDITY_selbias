@@ -272,6 +272,19 @@ lab var positive_death_negative_`phase' "Test negative (ref) vs test/death posit
 ********************************************************************************
 						* Death vs non-severe covid (+ test) *
 ********************************************************************************
+* Define severe covid through deaths 
+* Death = any covid death recorded via death certificate also with a positive test result
+* non-severe covid = positive test taken that didn't result in death
+
+capture drop death_testonly_nonsevere_`phase'
+gen death_testonly_nonsevere_`phase' = 1 if covid_death_`phase'==1 & positive_test_`phase'==1
+replace death_testonly_nonsevere_`phase' = 0 if positive_test_`phase'==1 & death_testonly_nonsevere_`phase'==.
+
+lab var death_testonly_nonsevere_`phase' "Non-severe covid  vs covid death `phase' with positive test "
+lab def death_testonly_nonsevere_`phase' 0 "Covid positive test" 1 "Covid death with positive test", modify
+lab val death_testonly_nonsevere_`phase' death_testonly_nonsevere_`phase'
+
+********************************************************************************
 
 * Define severe covid through deaths 
 * Death = any covid death, either confirmed or suspected
@@ -282,12 +295,26 @@ gen death_nonsevere_`phase' = 1 if covid_death_`phase'==1
 replace death_nonsevere_`phase' = 0 if positive_death_`phase'==1 & death_nonsevere_`phase'==.
 
 lab var death_nonsevere_`phase' "Non-severe covid  vs covid death `phase' "
-lab def death_nonsevere_`phase' 0 "Covid" 1 "Covid death", modify
+lab def death_nonsevere_`phase' 0 "Covid positive test" 1 "Covid death", modify
 lab val death_nonsevere_`phase' death_nonsevere_`phase'
 
 
 ********************************************************************************
 							* Death vs tested (+/-) *
+********************************************************************************
+
+* Define severe covid through deaths 
+* Death = any covid death with a positive COVID-19 test
+* Control = COVID-19 test, either positive or negative
+
+capture drop death_testonly_tested_`phase'
+gen death_testonly_tested_`phase' = 1 if covid_death_`phase'==1 & positive_test_`phase'==1
+replace death_testonly_tested_`phase' = 0 if death_testonly_tested_`phase'==. & test_`phase'==1
+
+lab var death_testonly_tested_`phase' "Tested (+ive and -ive) vs covid death `phase' with positive test"
+lab def death_testonly_tested_`phase' 0 "Tested" 1 "Covid death with positive test", modify
+lab val death_testonly_tested_`phase' death_testonly_tested_`phase'
+
 ********************************************************************************
 
 * Define severe covid through deaths 
@@ -305,6 +332,20 @@ lab val death_tested_`phase' death_tested_`phase'
 
 ********************************************************************************
 							* Death vs test negative *
+*********************************************************************************
+
+* Define severe covid through deaths 
+* Death = any covid death with a positive COVID-19 test
+* Control = negative test taken and no COVID death in phase
+
+capture drop death_testonly_negative_`phase'
+gen death_testonly_negative_`phase' = 1 if covid_death_`phase'==1 & positive_test_`phase'==1
+replace death_testonly_negative_`phase' = 0 if negative_test_`phase'==1 & death_testonly_negative_`phase'==.
+
+lab var death_testonly_negative_`phase' "Test negative  vs covid death `phase' with positive test"
+lab def death_testonly_negative_`phase' 0 "Covid test negative" 1 "Covid death with positive test", modify
+lab val death_testonly_negative_`phase' death_testonly_negative_`phase'
+
 ********************************************************************************
 
 * Define severe covid through deaths 
@@ -324,6 +365,19 @@ lab val death_negative_`phase' death_negative_`phase'
 ********************************************************************************
 							* Death vs population *
 ********************************************************************************
+* Define severe covid through deaths 
+* Death = any covid death, either confirmed or suspected
+* Control = all participants without a covid death
+
+capture drop death_testonly_population_`phase'
+gen death_testonly_population_`phase' = 1 if covid_death_`phase'==1 & positive_test_`phase'==1
+replace death_testonly_population_`phase' = 0 if death_testonly_population_`phase'==. & covid_death_`phase'!=1
+
+lab var death_testonly_population_`phase' "No covid death  vs covid death `phase' with positive test"
+lab def death_testonly_population_`phase' 0 "No covid death" 1 "Covid death with positive test", modify
+lab val death_testonly_population_`phase' death_testonly_population_`phase'
+
+********************************************************************************
 
 * Define severe covid through deaths 
 * Death = any covid death, either confirmed or suspected
@@ -341,7 +395,7 @@ lab val death_population_`phase' death_population_`phase'
 	* Set deaths from Covid/non-covid causes before the phase to missing *
 ********************************************************************************
 
-foreach var in test_`phase' death_`phase' positive_test_nontested_`phase' positive_death_nontested_`phase' negative_test_nontested_`phase' negative_death_nontested_`phase' positive_test_pop_`phase' positive_death_pop_`phase' positive_test_negative_`phase' positive_death_negative_`phase' death_nonsevere_`phase' death_tested_`phase' death_negative_`phase' death_population_`phase' {
+foreach var in test_`phase' death_`phase' positive_test_nontested_`phase' positive_death_nontested_`phase' negative_test_nontested_`phase' negative_death_nontested_`phase' positive_test_pop_`phase' positive_death_pop_`phase' positive_test_negative_`phase' positive_death_negative_`phase' death_testonly_nonsevere_`phase' death_nonsevere_`phase' death_testonly_tested_`phase' death_tested_`phase' death_testonly_negative_`phase' death_negative_`phase' death_testonly_population_`phase' death_population_`phase' {
 	
 	replace `var' = . if date_of_death!=. & date_of_death < date("`startDate'", "YMD")
 }
