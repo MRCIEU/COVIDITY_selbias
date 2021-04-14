@@ -29,9 +29,9 @@ cd "$resDir/results/COVIDITY/UKBB/univariate/202104"
 do "$scriptDir/1.aim1-predictors/UKBB/sub_testing_predictors.do" "phase1" "test" "tested"   "20210414"
 * Phase 1 results, accounting for tests/deaths
 do "$scriptDir/1.aim1-predictors/UKBB/sub_testing_predictors.do" "phase1" "death"  "TestsAndDeath" "20210414"
-* Phase 1 results, accounting for tests only
+* Phase 2 results, accounting for tests only
 do "$scriptDir/1.aim1-predictors/UKBB/sub_testing_predictors.do" "phase2" "test" "tested"   "20210414"
-* Phase 1 results, accounting for tests/deaths
+* Phase 2 results, accounting for tests/deaths
 do "$scriptDir/1.aim1-predictors/UKBB/sub_testing_predictors.do" "phase2" "death"  "TestsAndDeath" "20210414"
 
 
@@ -40,7 +40,7 @@ do "$scriptDir/1.aim1-predictors/UKBB/sub_testing_predictors.do" "phase2" "death
 do "$scriptDir/1.aim1-predictors/UKBB/sub_severity_predictors.do" "phase1" "testonly_" "tested"   "20210414"
 * Phase 1 results, accounting for deaths regardless of tests
 do "$scriptDir/1.aim1-predictors/UKBB/sub_severity_predictors.do" "phase1" "" "TestsAndDeath" "20210414"
-* Phase 1 results, accounting for deaths with a test only
+* Phase 2 results, accounting for deaths with a test only
 do "$scriptDir/1.aim1-predictors/UKBB/sub_severity_predictors.do" "phase2" "testonly_" "tested"   "20210414"
-* Phase 1 results, accounting for deaths regardless of tests
+* Phase 2 results, accounting for deaths regardless of tests
 do "$scriptDir/1.aim1-predictors/UKBB/sub_severity_predictors.do" "phase2" "" "TestsAndDeath" "20210414"
