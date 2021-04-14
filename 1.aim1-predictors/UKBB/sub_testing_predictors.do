@@ -98,35 +98,28 @@ foreach exposure in current_smoke  {
 	local out_label : var label `outcome'
 	local n = e(N)
 	
-	putexcel A`x'="`exp_label'" B`x'="Former smoker" 
-	putexcel A`y'="`exp_label'" B`y'="Current smoker" 
+	putexcel A`x'="`exp_label'" B`x'="Former smoker"  A`y'="`exp_label'" B`y'="Current smoker" 
 		local i=`i'+1
 		local letter: word `i' of `c(ALPHA)'
-	putexcel `letter'`x'="`out_label'" 
-	putexcel `letter'`y'="`out_label'" 
+	putexcel `letter'`x'="`out_label'" `letter'`y'="`out_label'" 
 		local i=`i'+1
 		local letter: word `i' of `c(ALPHA)'	
-	putexcel `letter'`x'=`beta_1' 
-	putexcel `letter'`y'=`beta_2' 
+	putexcel `letter'`x'=`beta_1' `letter'`y'=`beta_2'  
 		local i=`i'+1
 		local letter: word `i' of `c(ALPHA)'	
-	putexcel `letter'`x'=`lci_1' 
-	putexcel `letter'`y'=`lci_2' 
+	putexcel `letter'`x'=`lci_1' `letter'`y'=`lci_2'  
 		local i=`i'+1
 		local letter: word `i' of `c(ALPHA)'	
-	putexcel `letter'`x'=`uci_1' 
-	putexcel `letter'`y'=`uci_2' 	
+	putexcel `letter'`x'=`uci_1' `letter'`y'=`uci_2'  
 		local i=`i'+1
 		local letter: word `i' of `c(ALPHA)'	
-	putexcel `letter'`x'=`n' 
-	putexcel `letter'`y'=`n' 
+	putexcel `letter'`x'=`n' `letter'`y'=`n' 
 	
 	tab `outcome' if `exposure'!=. , matcell(numbers)	
 		local case = numbers[2,1]
 		local i=`i'+1
 		local letter: word `i' of `c(ALPHA)'	
-	putexcel `letter'`x'=`case' 
-	putexcel `letter'`y'=`case' 
+	putexcel `letter'`x'=`case' `letter'`y'=`case' 
 	
 	}
 }
@@ -161,42 +154,28 @@ foreach exposure in eduyears_quali  {
 	local out_label : var label `outcome'
 	local n = e(N)
 	
-	putexcel A`x'="`exp_label'" B`x'="AS/A level" 
-	putexcel A`y'="`exp_label'" B`y'="NVQ/vocational quali" 
-	putexcel A`z'="`exp_label'" B`z'="Degree or higher" 	
+	putexcel A`x'="`exp_label'" B`x'="AS/A level" A`y'="`exp_label'" B`y'="NVQ/vocational quali" A`z'="`exp_label'" B`z'="Degree or higher"   
 		local i=`i'+1
 		local letter: word `i' of `c(ALPHA)'
-	putexcel `letter'`x'="`out_label'" 
-	putexcel `letter'`y'="`out_label'" 
-	putexcel `letter'`z'="`out_label'" 
+	putexcel `letter'`x'="`out_label'" `letter'`y'="`out_label'" `letter'`z'="`out_label'"   
 		local i=`i'+1
 		local letter: word `i' of `c(ALPHA)'	
-	putexcel `letter'`x'=`beta_1' 
-	putexcel `letter'`y'=`beta_2' 
-	putexcel `letter'`z'=`beta_3' 
+	putexcel `letter'`x'=`beta_1' `letter'`y'=`beta_2' `letter'`z'=`beta_3' 
 		local i=`i'+1
 		local letter: word `i' of `c(ALPHA)'	
-	putexcel `letter'`x'=`lci_1' 
-	putexcel `letter'`y'=`lci_2' 
-	putexcel `letter'`z'=`lci_3' 
+	putexcel `letter'`x'=`lci_1' `letter'`y'=`lci_2' `letter'`z'=`lci_3' 
 		local i=`i'+1
 		local letter: word `i' of `c(ALPHA)'	
-	putexcel `letter'`x'=`uci_1' 
-	putexcel `letter'`y'=`uci_2' 
-	putexcel `letter'`z'=`uci_3' 	
+	putexcel `letter'`x'=`uci_1' `letter'`y'=`uci_2' `letter'`z'=`uci_3'  
 		local i=`i'+1
 		local letter: word `i' of `c(ALPHA)'	
-	putexcel `letter'`x'=`n' 
-	putexcel `letter'`y'=`n'
-	putexcel `letter'`z'=`n'	
+	putexcel `letter'`x'=`n' `letter'`y'=`n' `letter'`z'=`n' 
 	
 	tab `outcome' if `exposure'!=. , matcell(numbers)	
 		local case = numbers[2,1]
 		local i=`i'+1
 		local letter: word `i' of `c(ALPHA)'	
-	putexcel `letter'`x'=`case' 
-	putexcel `letter'`y'=`case' 
-	putexcel `letter'`z'=`case'
+	putexcel `letter'`x'=`case' `letter'`y'=`case' `letter'`z'=`case' 
 	
 	}
 }
@@ -237,49 +216,29 @@ foreach exposure in tdi_cat  {
 	local out_label : var label `outcome'
 	local n = e(N)
 	
-	putexcel A`x'="`exp_label'" B`x'="TDI 2" 
-	putexcel A`y'="`exp_label'" B`y'="TDI 3" 
-	putexcel A`z'="`exp_label'" B`z'="TDI 4" 	
-	putexcel A`a'="`exp_label'" B`a'="TDI 5" 	
+	putexcel A`x'="`exp_label'" B`x'="TDI 2" A`y'="`exp_label'" B`y'="TDI 3" A`z'="`exp_label'" B`z'="TDI 4" A`a'="`exp_label'" B`a'="TDI 5"    
 		local i=`i'+1
 		local letter: word `i' of `c(ALPHA)'
-	putexcel `letter'`x'="`out_label'" 
-	putexcel `letter'`y'="`out_label'" 
-	putexcel `letter'`z'="`out_label'" 
-	putexcel `letter'`a'="`out_label'" 
+	putexcel `letter'`x'="`out_label'" `letter'`y'="`out_label'" `letter'`z'="`out_label'" `letter'`a'="`out_label'"  
 		local i=`i'+1
 		local letter: word `i' of `c(ALPHA)'	
-	putexcel `letter'`x'=`beta_1' 
-	putexcel `letter'`y'=`beta_2' 
-	putexcel `letter'`z'=`beta_3' 
-	putexcel `letter'`a'=`beta_4' 
+	putexcel `letter'`x'=`beta_1' `letter'`y'=`beta_2' `letter'`z'=`beta_3' `letter'`a'=`beta_4'    
 		local i=`i'+1
 		local letter: word `i' of `c(ALPHA)'	
-	putexcel `letter'`x'=`lci_1' 
-	putexcel `letter'`y'=`lci_2' 
-	putexcel `letter'`z'=`lci_3' 
-	putexcel `letter'`a'=`lci_4' 
+	putexcel `letter'`x'=`lci_1' `letter'`y'=`lci_2' `letter'`z'=`lci_3' `letter'`a'=`lci_4'   
 		local i=`i'+1
 		local letter: word `i' of `c(ALPHA)'	
-	putexcel `letter'`x'=`uci_1' 
-	putexcel `letter'`y'=`uci_2' 
-	putexcel `letter'`z'=`uci_3'
-	putexcel `letter'`a'=`uci_4'
+	putexcel `letter'`x'=`uci_1' `letter'`y'=`uci_2' `letter'`z'=`uci_3' `letter'`a'=`uci_4' 
 		local i=`i'+1
 		local letter: word `i' of `c(ALPHA)'	
-	putexcel `letter'`x'=`n' 	
-	putexcel `letter'`y'=`n' 
-	putexcel `letter'`z'=`n' 	
-	putexcel `letter'`a'=`n' 
+	putexcel `letter'`x'=`n' `letter'`y'=`n' `letter'`z'=`n' `letter'`a'=`n'    	
 
 	tab `outcome' if `exposure'!=. , matcell(numbers)	
 		local case = numbers[2,1]
 		local i=`i'+1
 		local letter: word `i' of `c(ALPHA)'	
-	putexcel `letter'`x'=`case' 
-	putexcel `letter'`y'=`case' 
-	putexcel `letter'`z'=`case'
-	putexcel `letter'`a'=`case'	
+	putexcel `letter'`x'=`case' `letter'`y'=`case' `letter'`z'=`case' `letter'`a'=`case'	  
+
 	}
 }
 
