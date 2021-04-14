@@ -9,7 +9,7 @@ cd $PBS_O_WORKDIR
 
 module add apps/stata15
 
-stata sim-main-effect.do bmi_covars
+stata sim-infection.do bmi_covars 2 "effect"
 
 date
 

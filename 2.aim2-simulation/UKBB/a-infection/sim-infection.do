@@ -11,17 +11,20 @@ clear
 graph drop _all
 
 local setup = "`1'"
-di "`setup'"
+di "Setup: `setup'"
 
 local covidSelectOR = "`2'"
-di "`covidSelectOR'"
+di "OR of covid infection effect on selection: `covidSelectOR'"
+
+local bmiEffect = "`3'"
+di "BMI affects covid risk: `bmiEffect'"
 
 log using "out/log-effect-`setup'-`covidSelectOR'.txt", text replace
 
 set seed 1234
 
-file open myfile using "out/sim-main-effect-`setup'-`covidSelectOR'.csv", write replace
-file open myfile2 using "out/sim-main-effect-summaries-`setup'-`covidSelectOR'.csv", write replace
+file open myfile using "out/sim-`bmiEffect'-`setup'-`covidSelectOR'.csv", write replace
+file open myfile2 using "out/sim-`bmiEffect'-summaries-`setup'-`covidSelectOR'.csv", write replace
 
 file write myfile "iter,strata,estimate,lower,upper" _n
 file write myfile2 "iter,strata,mean" _n
@@ -53,19 +56,25 @@ while `i'<=`nSim' {
 	gen smoking_current = smoke_rand < 0.0989
 	gen smoking_previous = smoke_rand >=0.0989 & smoke_rand < 0.0989+0.3409
 
-	* BMI - mean 27.4, sd 4.75
-	gen sd_bmi =  -0.1561*education_alevel + -0.0289*education_voc + -0.2739*education_degree + 0.1606*sex_m + 0.0215*sd_age + 0.1049*smoking_previous - 0.1075*smoking_current + 0.0881*sd_tdi + 0.0107 + rnormal(0,0.983)
+	* SD BMI 
+	gen sd_bmi =  -0.1561*education_alevel + -0.0290*education_voc + -0.2739*education_degree + 0.1606*sex_m + 0.0214*sd_age + 0.1049*smoking_previous - 0.1074*smoking_current + 0.0881*sd_tdi + 0.0106 + rnormal(0,0.983)
 	*regress sd_bmi education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi
 	
 		
-
 	***
 	*** covid risk - 9.393% are tested positive, of those tested
 	*** this assumes the effect of the covariates on covid risk is the same in the non-selected sample as the selected sample
 	*** uses "Covid test result - Any positive test" results from ukb assocs
 	*** 
 	*** the intercept is changed to -2.8 from -2.2579 in the null version, to give the same covid distribution with BMI in this model
-	gen covidRiskPart = log(3)*sd_bmi + -0.3787*education_alevel + 0.0440*education_voc + -0.2748*education_degree + 0.2557*sex_m + -0.2043*sd_age + 0.0507*smoking_previous -0.1405*smoking_current + 0.1682*sd_tdi + -2.796
+
+	if ("`bmiEffect'" == "effect") {
+		gen covidRiskPart = log(3)*sd_bmi + -0.3787*education_alevel + 0.0440*education_voc + -0.2748*education_degree + 0.2557*sex_m + -0.2043*sd_age + 0.0507*smoking_previous -0.1405*smoking_current + 0.1682*sd_tdi + -2.796
+	}
+	else if ("`bmiEffect'" == "null") {
+		gen covidRiskPart = -0.3787*education_alevel + 0.0440*education_voc + -0.2748*education_degree + 0.2557*sex_m + -0.2043*sd_age + 0.0507*smoking_previous -0.1405*smoking_current + 0.1682*sd_tdi + -2.33
+	}
+
 	gen pCovid=exp(covidRiskPart)/(1+exp(covidRiskPart))
 	gen covid = runiform() <= pCovid
 		
