@@ -15,12 +15,15 @@ di "`setup'"
 local covidSelectOR = "`2'"
 di "`covidSelectOR'"
 
-log using "out/log-effect-`setup'.txt", text replace
+local bmiEffect = "`3'"
+di "BMI affects covid risk: `bmiEffect'"
+
+log using "out/log-`bmiEffect'-`setup'.txt", text replace
 
 set seed 1234
 
-file open myfile using "out/sim-main-effect-`setup'-`covidSelectOR'.csv", write replace
-file open myfile2 using "out/sim-main-effect-summaries-`setup'-`covidSelectOR'.csv", write replace
+file open myfile using "out/sim-`bmiEffect'-`setup'-`covidSelectOR'.csv", write replace
+file open myfile2 using "out/sim-`bmiEffect'-summaries-`setup'-`covidSelectOR'.csv", write replace
 
 file write myfile "iter,strata,estimate,lower,upper" _n
 file write myfile2 "iter,strata,mean" _n
@@ -68,12 +71,18 @@ while `i'<=`nSim' {
 
 	***
 	*** covid risk - 7.20% - from external source
-	gen covidRiskPart = log(3)*sd_bmi + 0.3179*education_alevel + 0.3313*education_voc + 0.3436*education_degree + 0.1944*sex_m + 0.0297*sd_age + 0.3287*smoking_previous + 0.2191*smoking_current + -0.0497*imd + -3.4846
-	gen pCovid=exp(covidRiskPart)/(1+exp(covidRiskPart))
-	gen covid = runiform() <= pCovid
 
-*	logistic covid education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi, coef
-		
+	if ("`bmiEffect'" == "effect") {
+		gen covidRiskPart = log(3)*sd_bmi + 0.3179*education_alevel + 0.3313*education_voc + 0.3436*education_degree + 0.1944*sex_m + 0.0297*sd_age + 0.3287*smoking_previous + 0.2191*smoking_current + -0.0497*imd + -3.4846
+	}
+	else if ("`bmiEffect'" == "null") {
+		gen covidRiskPart = 0.3179*education_alevel + 0.3313*education_voc + 0.3436*education_degree + 0.1944*sex_m + 0.0297*sd_age + 0.3287*smoking_previous + 0.2191*smoking_current + -0.0497*imd + -3.0098
+	}
+
+	gen pCovid=exp(covidRiskPart)/(1+exp(covidRiskPart))
+	gen covid = runiform() <= pCovid	
+
+	
 	***
 	*** selection - 19.974% are selected into our sample (responded to first covid questionnaire)
 

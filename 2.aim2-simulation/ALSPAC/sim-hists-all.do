@@ -9,12 +9,12 @@ do ../sim-hists.do null all 2
 
 * Partial DAGs
 
-do ../sim-hists.do null bmi
-do ../sim-hists.do null covars
-do ../sim-hists.do null covid
-do ../sim-hists.do null bmi_covars
-do ../sim-hists.do null bmi_covid
-do ../sim-hists.do null covars_covid
+do ../sim-hists.do null bmi 2
+do ../sim-hists.do null covars 2
+do ../sim-hists.do null covid 2
+do ../sim-hists.do null bmi_covars 2
+do ../sim-hists.do null bmi_covid 2
+do ../sim-hists.do null covars_covid 2
 
 
 ***
@@ -23,12 +23,12 @@ do ../sim-hists.do null covars_covid
 do ../sim-hists.do effect all 2
 
 
-do ../sim-hists.do effect bmi
-do ../sim-hists.do effect covars
-do ../sim-hists.do effect covid
-do ../sim-hists.do effect bmi_covars
-do ../sim-hists.do effect bmi_covid
-do ../sim-hists.do effect covars_covid
+do ../sim-hists.do effect bmi 2
+do ../sim-hists.do effect covars 2
+do ../sim-hists.do effect covid 2
+do ../sim-hists.do effect bmi_covars 2
+do ../sim-hists.do effect bmi_covid 2
+do ../sim-hists.do effect covars_covid 2
 
 
 

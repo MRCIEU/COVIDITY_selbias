@@ -10,7 +10,7 @@ cd ..
 
 module add apps/stata15
 
-stata sim-main-effect.do bmi
+stata sim-infection.do bmi 2 "effect"
 
 date
 

@@ -10,7 +10,7 @@ cd ..
 
 module add apps/stata15
 
-stata sim-main-null.do bmi
+stata sim-infection.do bmi 2 "null"
 
 date
 

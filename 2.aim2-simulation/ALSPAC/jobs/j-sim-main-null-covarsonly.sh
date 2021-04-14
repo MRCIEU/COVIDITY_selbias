@@ -10,7 +10,7 @@ cd ..
 
 module add apps/stata15
 
-stata sim-main-null.do covars
+stata sim-infection.do covars 2 "null"
 
 date
 
