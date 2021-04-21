@@ -10,7 +10,7 @@ cd ..
 
 module add apps/stata15
 
-stata sim-main-effect.do covars
+stata sim-infection.do covars 2 "effect"
 
 date
 

@@ -6,10 +6,11 @@
 date
 
 cd $PBS_O_WORKDIR
+cd ..
 
 module add apps/stata15
 
-stata sim-main-null.do all 2
+stata sim-infection.do all 2 "null"
 
 date
 
