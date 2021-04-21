@@ -50,18 +50,18 @@ matrix results = results[1..6,1..12]
 	putexcel B2="0b.eduyears - GCSE or less" C2="1.eduyears - AS/A level" D2="3.eduyears - NVQ/vocational quali" E2="4.eduyears - degree or higher" F2="0b.sex - female" G2="1.sex - male" H2="Age (SD)" I2="0b.current_smoke - never smoker" J2="1.current_smoke - former smoker" K2="2.current_smoke - current smoker" L2="TDI (SD)" 
 		
 ********************************************************************************		
-* Association of BMI/covariates with dying from covid in the covid positive subsample
+* Association of covariates with dying from covid in the covid positive subsample
 * Specify sample to either deaths with a poitive tests, or deaths with/without a positive text
 
 * Regression
-logistic death_nonsevere_phase1 sd_bmi i.eduyears_quali i.sex sd_age i.current_smoke sd_tdi if positive_`caseDef'_phase1==1, coef
+logistic death_nonsevere_phase1 i.eduyears_quali i.sex sd_age i.current_smoke sd_tdi if positive_`caseDef'_phase1==1, coef
 
 * Storing and formatting results
 matrix results = r(table)
-matrix results = results[1..6,1..13]
-	putexcel set `date'_UKBB_simulations_severity_`sampleDef'.xlsx, sheet(test_outcome_all) modify
+matrix results = results[1..6,1..12]
+	putexcel set `date'_UKBB_simulations_severity_`sampleDef'.xlsx, sheet(death_outcome_all) modify
 	putexcel A1 = matrix(results), names nformat(number_d2)
-	putexcel B2="BMI (SD)" C2="0b.eduyears - GCSE or less" D2="1.eduyears - AS/A level" E2="3.eduyears - NVQ/vocational quali" F2="4.eduyears - degree or higher" G2="0b.sex - female" H2="1.sex - male" I2="Age (SD)" J2="0b.current_smoke - never smoker" K2="1.current_smoke - former smoker" L2="2.current_smoke - current smoker" M2="TDI (SD)" 
+	putexcel B2="0b.eduyears - GCSE or less" C2="1.eduyears - AS/A level" D2="3.eduyears - NVQ/vocational quali" E2="4.eduyears - degree or higher" F2="0b.sex - female" G2="1.sex - male" H2="Age (SD)" I2="0b.current_smoke - never smoker" J2="1.current_smoke - former smoker" K2="2.current_smoke - current smoker" L2="TDI (SD)"
 		
 ********************************************************************************	
 * Prevalence and distribution estimates
