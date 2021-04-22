@@ -3,7 +3,7 @@
 
 This repository contains the pipeline of the analyses performed to inform about and reduce potential selection bias in COVID-19 studies. Files contain R code that can be used as a template for running these analyses in other cohorts.
 
-1. Steps to create the *dataset(s)* with the COVID-19 outcomes and the potential predictors of selection (**folder _0.datasets_**).
+1. Steps to create the *dataset(s)* with the COVID-19 outcomes and the potential predictors of selection (**_0.datasets_**).
 
 2. Steps and code to assess whether *potential predictors of selection* are associated with *outcomes of COVID-19 related to being selected into the sample* (**_1.aim1-predictors_**).
 
