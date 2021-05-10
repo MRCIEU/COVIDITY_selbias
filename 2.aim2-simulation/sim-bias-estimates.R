@@ -7,6 +7,7 @@ printStats <- function(simres, trueeffect, strata, outfile) {
 
 	simres = simres[which(simres$strata==strata),]
 
+	stopifnot(nrow(simres)==1000)
 
 	##
 	## mean bias
@@ -48,6 +49,8 @@ args = commandArgs(trailingOnly=TRUE)
 bmi_assoc = args[1]
 print(bmi_assoc)
 
+simType = args[2]
+print(simType)
 
 
 estimatesForSim <- function(bmi_assoc, setup, covidSelectOR) {
@@ -88,6 +91,7 @@ estimatesForSim <- function(bmi_assoc, setup, covidSelectOR) {
 	resstr = paste(resstr, paste0(formatStat(res$meanbias), " (", formatStat(res$mcse), ")"), sep='\t')
 
 	#cat(resstr, outfile, append=TRUE)
+	cat(setup, '\n')
 	cat(resstr, '\n')
 
 }
@@ -103,11 +107,25 @@ estimatesForSim(bmi_assoc, "bmi_covars", 2)
 estimatesForSim(bmi_assoc, "bmi_covid", 2)
 estimatesForSim(bmi_assoc, "covars_covid", 2)
 
+if (simType == 'severity') {
+estimatesForSim(bmi_assoc, "severity", 2)
+estimatesForSim(bmi_assoc, "severity_covid", 2)
+estimatesForSim(bmi_assoc, "severity_covars", 2)
+estimatesForSim(bmi_assoc, "severity_bmi", 2)
+estimatesForSim(bmi_assoc, "severity_bmi_covars", 2)
+estimatesForSim(bmi_assoc, "severity_bmi_covid", 2)
+estimatesForSim(bmi_assoc, "severity_covars_covid", 2)
+estimatesForSim(bmi_assoc, "bmi_covars_covid", 2)
+}
+
+
 cat("OR=5 \n")
 estimatesForSim(bmi_assoc, "all", 5)
 
 cat("OR=10 \n")
 estimatesForSim(bmi_assoc, "all", 10)
+
+
 
 
 

@@ -62,12 +62,7 @@ while `i'<=`nSim' {
 	***
 	*** covid risk - 3.16% – from external source
 
-        if ("`bmiEffect'" == "effect") {
-                gen covidRiskPart = log(3)*sd_bmi + -0.2221*education_alevel + 0.1172*education_voc + -0.2043*education_degree + 0.2838*sex_m + -0.0702*sd_age + 0.0436*smoking_previous -0.2052*smoking_current + 0.1231*sd_tdi + -4.100
-        }
-	else if ("`bmiEffect'" == "null") {
-                gen covidRiskPart = -0.2221*education_alevel + 0.1172*education_voc + -0.2043*education_degree + 0.2838*sex_m + -0.0702*sd_age + 0.0436*smoking_previous -0.2052*smoking_current + 0.1231*sd_tdi + -3.526
-	}
+        gen covidRiskPart = -0.2221*education_alevel + 0.1172*education_voc + -0.2043*education_degree + 0.2838*sex_m + -0.0702*sd_age + 0.0436*smoking_previous -0.2052*smoking_current + 0.1231*sd_tdi + -3.526
 	
 	gen pCovid=exp(covidRiskPart)/(1+exp(covidRiskPart))
 	gen covid = runiform() <= pCovid
@@ -76,7 +71,14 @@ while `i'<=`nSim' {
 	*** covid severity proxy – 3.13% of those with a SARS-CoV-2 infection died - from external source
 
 	* params from sheet 'death_outcome_all' in Alice's xlsx
-        gen deathCovidPart = -0.3682*education_alevel + -0.0496*education_voc + 0.0602*education_degree + 0.3475*sex_m + 0.9288*sd_age + 0.0261*smoking_previous + 0.5205*smoking_current + 0.0882*sd_tdi + -4.050
+
+	if ("`bmiEffect'" == "effect") {
+		gen deathCovidPart = log(3)*sd_bmi + -0.0496*education_voc + 0.0602*education_degree + 0.3475*sex_m + 0.9288*sd_age + 0.0261*smoking_previous + 0.5205*smoking_current + 0.0882*sd_tdi + -4.599
+	}
+	else if ("`bmiEffect'" == "null") {
+	        gen deathCovidPart = -0.3682*education_alevel + -0.0496*education_voc + 0.0602*education_degree + 0.3475*sex_m + 0.9288*sd_age + 0.0261*smoking_previous + 0.5205*smoking_current + 0.0882*sd_tdi + -4.050
+	}
+
         gen pCovidSeverity=exp(deathCovidPart)/(1+exp(deathCovidPart))
         gen covidSeverity = runiform() <= pCovidSeverity if covid == 1
 
@@ -98,43 +100,35 @@ while `i'<=`nSim' {
 		}
 
 	}
-	else if ("`setup'" == "bmi") {
-		di "generate selection with bmi only"
-		gen logitSelectPart = 0.1641*sd_bmi + -3.253
-	}
-	else if	("`setup'" == "covars") {
-		di "generate selection with covars only"
-		gen logitSelectPart =  -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi + -3.253
-        }
-	else if	("`setup'" == "covid") {
-		di "generate selection with covid only"
-		gen logitSelectPart = log(2)*covid +  -3.253
-        }
-	else if	("`setup'" == "bmi_covars") {
-		di "generate selection with bmi and covars"
-		gen logitSelectPart = 0.1641*sd_bmi + -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi + -3.253
-        }
-	else if ("`setup'" == "bmi_covid") {
-		di "generate selection with bmi and covid"
-		gen logitSelectPart = 0.1641*sd_bmi + log(2)*covid + -3.253
-        }
-	else if ("`setup'" == "covars_covid") {
-		di "generate selection with covars and covid
-		gen logitSelectPart = -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi + log(2)*covid + -3.253
-        }
 	else {
-		di "Valid setup not specified : `setup'"
-		exit, clear
-	}
+		gen logitSelectPart = -3.253
 
+		if (strpos("`setup'","bmi")>0) {
+			di "generate selection with bmi"
+			replace logitSelectPart = logitSelectPart + 0.1641*sd_bmi
+		}
+
+		if (strpos("`setup'","covars")>0) {
+			di "generate selection with covars"
+			replace logitSelectPart = logitSelectPart + -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi
+	        }
+
+		if (strpos("`setup'","covid")>0) {
+			di "generate selection with covid"
+			replace logitSelectPart = logitSelectPart + log(2)*covid
+	        }	
+	}
 
 	gen pSelect=exp(logitSelectPart)/(1+exp(logitSelectPart))
 	gen selection1 = runiform() <= pSelect
 
 	* all those who died with covid were tested so set these to selected
 	gen selection = selection1
-	replace selection = 1 if covidSeverity == 1
-	
+
+	if ("`setup'" == "all" | strpos("`setup'","severity")>0) {
+		di "generate selection with severity"
+		replace selection = 1 if covidSeverity == 1
+	}
 	
 	***
 	*** tidy and check distributions
