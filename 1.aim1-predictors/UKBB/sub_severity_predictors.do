@@ -19,7 +19,7 @@ di "`date'"
 /* Setting up results file */
 
 
-	putexcel set `date'_univariate_`sampleDef'_`phase', sheet(results) modify
+	putexcel set `date'_univariate_severity_`sampleDef'_`phase', sheet(results) modify
 	
 	putexcel A1="Variable" B1="Coef" ///
 		C1="Outcome" D1="Coefficient_OR" E1="lower_CI" F1="Upper_CI" G1="N total" H1="N Case" ///
