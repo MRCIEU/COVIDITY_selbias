@@ -97,27 +97,27 @@ while `i'<=`nSim' {
 	
 	if ("`setup'" == "bmi") {
 		di "generate selection with bmi only"
-		gen logitSelectPart = 0.1435*sd_bmi + -3.311
+		gen logitSelectPart = 0.1641*sd_bmi + -3.253
 	}
 	else if	("`setup'" == "covars") {
 		di "generate selection with covars only"
-		gen logitSelectPart =  -0.0799*education_alevel + -0.0265*education_voc + -0.1348*education_degree + 0.1023*sex_m + 0.2273*sd_age + 0.1441*smoking_previous + 0.2977*smoking_current + 0.1190*sd_tdi + -3.311
+		gen logitSelectPart =  -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi + -3.253
         }
 	else if	("`setup'" == "covid") {
 		di "generate selection with covid only"
-		gen logitSelectPart = log(2)*covid + -3.311
+		gen logitSelectPart = log(2)*covid + -3.253
         }
 	else if	("`setup'" == "bmi_covars") {
 		di "generate selection with bmi and covars"
-		gen logitSelectPart = 0.1435*sd_bmi + -0.0799*education_alevel + -0.0265*education_voc + -0.1348*education_degree + 0.1023*sex_m + 0.2273*sd_age + 0.1441*smoking_previous + 0.2977*smoking_current + 0.1190*sd_tdi + -3.311
+		gen logitSelectPart = 0.1641*sd_bmi + -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi + -3.253
         }
 	else if ("`setup'" == "bmi_covid") {
 		di "generate selection with bmi and covid"
-		gen logitSelectPart = 0.1435*sd_bmi + log(2)*covid + -3.311
+		gen logitSelectPart = 0.1641*sd_bmi + log(2)*covid + -3.253
         }
 	else if ("`setup'" == "covars_covid") {
 		di "generate selection with covars and covid
-		gen logitSelectPart = -0.0799*education_alevel + -0.0265*education_voc + -0.1348*education_degree + 0.1023*sex_m + 0.2273*sd_age + 0.1441*smoking_previous + 0.2977*smoking_current + 0.1190*sd_tdi + log(2)*covid + -3.311
+		gen logitSelectPart = -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi + log(2)*covid + -3.253
         }
 	else {
 		di "Valid setup not specified : `setup'"
