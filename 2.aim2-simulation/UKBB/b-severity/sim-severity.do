@@ -73,10 +73,10 @@ while `i'<=`nSim' {
 	* params from sheet 'death_outcome_all' in Alice's xlsx
 
 	if ("`bmiEffect'" == "effect") {
-		gen deathCovidPart = log(3)*sd_bmi + -0.0496*education_voc + 0.0602*education_degree + 0.3475*sex_m + 0.9288*sd_age + 0.0261*smoking_previous + 0.5205*smoking_current + 0.0882*sd_tdi + -4.599
+		gen deathCovidPart = log(3)*sd_bmi + -0.3682*education_alevel + -0.0496*education_voc + 0.0602*education_degree + 0.3475*sex_m + 0.9288*sd_age + 0.0261*smoking_previous + 0.5205*smoking_current + 0.0882*sd_tdi + -4.584
 	}
 	else if ("`bmiEffect'" == "null") {
-	        gen deathCovidPart = -0.3682*education_alevel + -0.0496*education_voc + 0.0602*education_degree + 0.3475*sex_m + 0.9288*sd_age + 0.0261*smoking_previous + 0.5205*smoking_current + 0.0882*sd_tdi + -4.050
+	        gen deathCovidPart = -0.3682*education_alevel + -0.0496*education_voc + 0.0602*education_degree + 0.3475*sex_m + 0.9288*sd_age + 0.0261*smoking_previous + 0.5205*smoking_current + 0.0882*sd_tdi + -4.017
 	}
 
         gen pCovidSeverity=exp(deathCovidPart)/(1+exp(deathCovidPart))
