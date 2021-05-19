@@ -24,7 +24,7 @@ file open myfile using "out/sim-`bmiEffect'-`setup'-`covidSelectOR'.csv", write 
 file open myfile2 using "out/sim-`bmiEffect'-summaries-`setup'-`covidSelectOR'.csv", write replace
 
 
-file write myfile "iter,strata,estimate,lower,upper" _n
+file write myfile "iter,strata,estimate,lower,upper,n,conv" _n
 file write myfile2 "iter,strata,mean" _n
 
 

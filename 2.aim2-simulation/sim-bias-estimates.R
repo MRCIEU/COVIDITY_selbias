@@ -7,8 +7,6 @@ printStats <- function(simres, trueeffect, strata, outfile) {
 
 	simres = simres[which(simres$strata==strata),]
 
-	stopifnot(nrow(simres)==1000)
-	#print(nrow(simres))
 
 	##
 	## mean bias
@@ -75,6 +73,23 @@ estimatesForSim <- function(bmi_assoc, setup, covidSelectOR) {
 	simres = read.table(paste0("out/sim-",bmi_assoc,"-", setup, "-", covidSelectOR, ".csv"), header=1, sep=",")
 	# columns: iter,strata,estimate,lower,upper
 
+
+	# remove any iterations where at least 1 regression did not converge
+
+	if ('conv' %in% colnames(simres)) {
+		iterRemove = unique(simres$iter[which(simres$conv==0)])
+
+		print(paste0('Number of iterations: ', length(unique(simres$iter)), '. Number of iterations containing a regression that did not converge: ', length(iterRemove)))
+		if (length(iterRemove)>0) {
+			ix = which(simres$iter %in% iterRemove)
+			simres = simres[-ix,]
+			print(paste0('Those iterations have been removed. Number of iterations included: ', length(unique(simres$iter))))
+		}
+	}	
+	else {
+		# no converge indicator column so all iterations should be included so stop if there aren't 5000 rows (1000 iters with 5 tests each) 
+		stopifnot(nrow(simres)==5000)
+	}
 
 	# set true beta in log odds, assoc of bmi with SARS-CoV-2 infection or COVID-19 severity
 
