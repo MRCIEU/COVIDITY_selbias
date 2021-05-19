@@ -45,9 +45,9 @@ printStats <- function(simres, trueeffect, strata, outfile) {
 
 }
 
-formatStat <- function(stat) {
+formatStat <- function(stat, dp=4) {
 
-	return(sprintf("%.4f", stat))
+	return(sprintf(paste0("%.",dp,"f"), stat))
 
 }
 
@@ -107,27 +107,27 @@ estimatesForSim <- function(bmi_assoc, setup, covidSelectOR) {
 
 	res = printStats(simres, trueeffect, "all")
 	resstr = paste0(formatStat(res$biasMean), " (", formatStat(res$biasMCSE), ")")
-	resstrCov = paste0(formatStat(res$coverage), " (", formatStat(res$coverageMCSE), ")")
+	resstrCov = paste0(formatStat(res$coverage, 3), " (", formatStat(res$coverageMCSE), ")")
 
 	res = printStats(simres, trueeffect, "all-confadj")
 	resstr = paste(resstr, paste0(formatStat(res$biasMean), " (", formatStat(res$biasMCSE), ")"), sep='\t')
-	resstrCov = paste(resstrCov, paste0(formatStat(res$coverage), " (", formatStat(res$coverageMCSE), ")"), sep='\t')
+	resstrCov = paste(resstrCov, paste0(formatStat(res$coverage, 3), " (", formatStat(res$coverageMCSE), ")"), sep='\t')
 
 	res = printStats(simres, trueeffect, "selected")
 	resstr = paste(resstr, paste0(formatStat(res$biasMean), " (", formatStat(res$biasMCSE), ")"), sep='\t')
-	resstrCov = paste(resstrCov, paste0(formatStat(res$coverage), " (", formatStat(res$coverageMCSE), ")"), sep='\t')
+	resstrCov = paste(resstrCov, paste0(formatStat(res$coverage, 3), " (", formatStat(res$coverageMCSE), ")"), sep='\t')
 
 	res = printStats(simres, trueeffect, "selected-confadj")
 	resstr = paste(resstr, paste0(formatStat(res$biasMean), " (", formatStat(res$biasMCSE), ")"), sep='\t')
-	resstrCov = paste(resstrCov, paste0(formatStat(res$coverage), " (", formatStat(res$coverageMCSE), ")"), sep='\t')
+	resstrCov = paste(resstrCov, paste0(formatStat(res$coverage, 3), " (", formatStat(res$coverageMCSE), ")"), sep='\t')
 
 	res = printStats(simres, trueeffect, "control-everyone")
 	resstr = paste(resstr, paste0(formatStat(res$biasMean), " (", formatStat(res$biasMCSE), ")"), sep='\t')
-	resstrCov = paste(resstrCov, paste0(formatStat(res$coverage), " (", formatStat(res$coverageMCSE), ")"), sep='\t')
+	resstrCov = paste(resstrCov, paste0(formatStat(res$coverage, 3), " (", formatStat(res$coverageMCSE), ")"), sep='\t')
 
 
 	#cat(resstr, outfile, append=TRUE)
-	cat(setup, '\n')
+	cat('-------- ', setup, '\n')
 	cat(resstr, '\n')
 	cat(resstrCov, '\n')
 
