@@ -1,16 +1,16 @@
 #!/bin/bash
 #PBS -l walltime=5:00:00,nodes=1:ppn=1
-#PBS -o output-sim-main-null-covarscovid.file
+#PBS -o output-sim-main-bmieffect-nointeract.file
 #---------------------------------------------
 
 date
 
 cd $PBS_O_WORKDIR
-cd .. 
+cd ..
 
 module add apps/stata15
 
-stata sim-infection.do covars_covid 2 "null"
+stata sim-infection.do all 2 "effect" "nointeract"
 
 date
 
