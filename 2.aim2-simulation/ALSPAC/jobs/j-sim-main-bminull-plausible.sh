@@ -10,7 +10,7 @@ cd ..
 
 module add apps/stata15
 
-stata sim-infection.do all 2 "null" "plausible"
+stata sim-infection.do "null" "plausible"
 
 date
 

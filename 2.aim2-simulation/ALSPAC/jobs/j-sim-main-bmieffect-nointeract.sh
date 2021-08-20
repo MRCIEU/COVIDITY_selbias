@@ -10,7 +10,7 @@ cd ..
 
 module add apps/stata15
 
-stata sim-infection.do all 2 "effect" "nointeract"
+stata sim-infection.do "effect" "nointeract"
 
 date
 

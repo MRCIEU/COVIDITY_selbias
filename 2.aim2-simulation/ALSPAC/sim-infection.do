@@ -9,21 +9,18 @@
 clear
 graph drop _all
 
-local setup = "`1'"
-di "`setup'"
-
-local covidSelectOR = "`2'"
-di "`covidSelectOR'"
-
-local bmiEffect = "`3'"
+local bmiEffect = "`1'"
 di "BMI affects covid risk: `bmiEffect'"
 
-log using "out/log-`bmiEffect'-`setup'.txt", text replace
+local selInteractEffect = "`2'"
+di "Interaction effect of BMI/sars-cov-2 on selection: `selInteractEffect'"
+
+log using "out/log-`bmiEffect'-`selInteractEffect'.txt", text replace
 
 set seed 1234
 
-file open myfile using "out/sim-`bmiEffect'-`setup'-`covidSelectOR'.csv", write replace
-file open myfile2 using "out/sim-`bmiEffect'-summaries-`setup'-`covidSelectOR'.csv", write replace
+file open myfile using "out/sim-`bmiEffect'-`selInteractEffect'.csv", write replace
+file open myfile2 using "out/sim-`bmiEffect'-`selInteractEffect'-summaries.csv", write replace
 
 file write myfile "iter,strata,estimate,lower,upper" _n
 file write myfile2 "iter,strata,mean" _n
@@ -87,12 +84,12 @@ while `i'<=`nSim' {
 	*** selection - 19.974% are selected into our sample (responded to first covid questionnaire)
 	
 	* generate probability of being selected using Poisson model
-	if ("`selectionInteractionEffect'" == "nointeract") {
+	if ("`selInteractEffect'" == "nointeract") {
 
 		gen logp = XXXX*sd_bmi + XXXX*education_alevel + XXXX*education_voc + XXXX*education_degree + XXXX*sex_m + XXXX*sd_age + XXXX*smoking_previous + XXXX*smoking_current + XXXX*imd  + XXXX*covid + XXXX
 
 	}
-	else if ("`selectionInteractionEffect'" == "plausible") {
+	else if ("`selInteractEffect'" == "plausible") {
 
 		gen covidBMIinteract = sd_bmi*covid
 		gen logp = XXXX*sd_bmi + XXXX*education_alevel + XXXX*education_voc + XXXX*education_degree + XXXX*sex_m + XXXX*sd_age + XXXX*smoking_previous + XXXX*smoking_current + XXXX*imd  + XXXX*covid + XXXX*covidBMIinteract * XXXX
