@@ -6,3 +6,5 @@
 *.file
 *.sh.e*
 off
+*.pdf
+*.txt
