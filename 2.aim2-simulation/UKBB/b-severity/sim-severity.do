@@ -7,21 +7,18 @@
 clear
 graph drop _all
 
-local setup = "`1'"
-di "`setup'"
-
-local covidSelectOR = "`2'"
+local covidSelectOR = "`1'"
 di "`covidSelectOR'"
 
-local bmiEffect = "`3'"
-di "BMI affects covid risk: `bmiEffect'"
+local selInteractEffect = "`2'"
+di "Interaction effect of BMI/sars-cov-2 on selection: `selInteractEffect'"
 
-log using "out/log-`bmiEffect'-`setup'-`covidSelectOR'.txt", text replace
+log using "out/log-`bmiEffect'-`selInteractEffect'.txt", text replace
 
 set seed 1234
 
-file open myfile using "out/sim-`bmiEffect'-`setup'-`covidSelectOR'.csv", write replace
-file open myfile2 using "out/sim-`bmiEffect'-summaries-`setup'-`covidSelectOR'.csv", write replace
+file open myfile using "out/sim-`bmiEffect'-`selInteractEffect'.csv", write replace
+file open myfile2 using "out/sim-`bmiEffect'-`selInteractEffect'-summaries.csv", write replace
 
 
 file write myfile "iter,strata,estimate,lower,upper,n,conv" _n
@@ -80,47 +77,30 @@ while `i'<=`nSim' {
 	}
 
         gen pCovidSeverity=exp(deathCovidPart)/(1+exp(deathCovidPart))
-        gen covidSeverity = runiform() <= pCovidSeverity if covid == 1
-
+	gen covidSeverity = rbinomial(1,pCovidSeverity) if covid == 1
 	
 	***
 	*** selection - 4.329% are selected into our sample (have had a covid test taken)
 
-	* params from sheet 'test_outcome_all' in Alice's xlsx
-	if ("`setup'" == "all") {
-		di "generate selection with all indep vars"
-		if ("`covidSelectOR'" == "2") {
-			gen logitSelectPart = 0.1641*sd_bmi + -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi + log(2)*covid + -3.253
-		}
-		else if ("`covidSelectOR'" == "5") {
-			gen logitSelectPart = 0.1641*sd_bmi + -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi + log(5)*covid + -3.340
-		}
-		else if	("`covidSelectOR'" == "10") {
-			gen logitSelectPart = 0.1641*sd_bmi + -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi + log(10)*covid + -3.441
-		}
+	* generate probability of being selected using Poisson model
+        if ("`selInteractEffect'" == "nointeract") {
 
-	}
-	else {
-		gen logitSelectPart = -3.253
+		gen logp = XXXX*sd_bmi + XXXX*education_alevel + XXXX*education_voc + XXXX*education_degree + XXXX*sex_m + XXXX*sd_age + XXXX*smoking_previous + XXXX*smoking_current + XXXX*sd_tdi + XXXX*covid + XXXX
 
-		if (strpos("`setup'","bmi")>0) {
-			di "generate selection with bmi"
-			replace logitSelectPart = logitSelectPart + 0.1641*sd_bmi
-		}
+        }
+	else if ("`selInteractEffect'" == "plausible") {
 
-		if (strpos("`setup'","covars")>0) {
-			di "generate selection with covars"
-			replace logitSelectPart = logitSelectPart + -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi
-	        }
+                gen covidBMIinteract = sd_bmi*covid
+		gen logp = XXXX*sd_bmi + XXXX*education_alevel + XXXX*education_voc + XXXX*education_degree + XXXX*sex_m + XXXX*sd_age + XXXX*smoking_previous + XXXX*smoking_current +	XXXX*sd_tdi + XXXX*covid + XXXX*covidBMIinteract + XXXX
 
-		if (strpos("`setup'","covid")>0) {
-			di "generate selection with covid"
-			replace logitSelectPart = logitSelectPart + log(2)*covid
-	        }	
-	}
+        }
 
-	gen pSelect=exp(logitSelectPart)/(1+exp(logitSelectPart))
-	gen selection1 = runiform() <= pSelect
+
+	# generate selection variable - whether you got a test
+        gen pSel = exp(logp)
+        summ pSel
+        gen selection1 = rbinomial(1,pSel)
+
 
 	* all those who died with covid were tested so set these to selected
 	gen selection = selection1

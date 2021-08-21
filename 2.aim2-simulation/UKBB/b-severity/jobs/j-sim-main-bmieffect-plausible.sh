@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -l walltime=5:00:00,nodes=1:ppn=1
-#PBS -o output-sim-main-effect-severitybmicovid.file
+#PBS -o output-sim-main-bmieffect-plausible.file
 #---------------------------------------------
 
 date
@@ -10,7 +10,7 @@ cd ..
 
 module add apps/stata15
 
-stata sim-severity.do severity_bmi_covid 2 "effect"
+stata sim-severity.do "effect" "plausible"
 
 date
 
