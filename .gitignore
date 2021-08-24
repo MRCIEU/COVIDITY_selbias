@@ -5,3 +5,6 @@
 *.log
 *.file
 *.sh.e*
+off
+*.pdf
+*.txt

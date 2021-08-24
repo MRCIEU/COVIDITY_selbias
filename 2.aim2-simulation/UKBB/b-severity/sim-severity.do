@@ -7,24 +7,21 @@
 clear
 graph drop _all
 
-local setup = "`1'"
-di "`setup'"
-
-local covidSelectOR = "`2'"
+local covidSelectOR = "`1'"
 di "`covidSelectOR'"
 
-local bmiEffect = "`3'"
-di "BMI affects covid risk: `bmiEffect'"
+local selInteractEffect = "`2'"
+di "Interaction effect of BMI/sars-cov-2 on selection: `selInteractEffect'"
 
-log using "out/log-`bmiEffect'-`setup'-`covidSelectOR'.txt", text replace
+log using "out/log-`bmiEffect'-`selInteractEffect'.txt", text replace
 
 set seed 1234
 
-file open myfile using "out/sim-`bmiEffect'-`setup'-`covidSelectOR'.csv", write replace
-file open myfile2 using "out/sim-`bmiEffect'-summaries-`setup'-`covidSelectOR'.csv", write replace
+file open myfile using "out/sim-`bmiEffect'-`selInteractEffect'.csv", write replace
+file open myfile2 using "out/sim-`bmiEffect'-`selInteractEffect'-summaries.csv", write replace
 
 
-file write myfile "iter,strata,estimate,lower,upper" _n
+file write myfile "iter,strata,estimate,lower,upper,n,conv" _n
 file write myfile2 "iter,strata,mean" _n
 
 
@@ -62,12 +59,7 @@ while `i'<=`nSim' {
 	***
 	*** covid risk - 3.16% – from external source
 
-        if ("`bmiEffect'" == "effect") {
-                gen covidRiskPart = log(3)*sd_bmi + -0.2221*education_alevel + 0.1172*education_voc + -0.2043*education_degree + 0.2838*sex_m + -0.0702*sd_age + 0.0436*smoking_previous -0.2052*smoking_current + 0.1231*sd_tdi + -4.100
-        }
-	else if ("`bmiEffect'" == "null") {
-                gen covidRiskPart = -0.2221*education_alevel + 0.1172*education_voc + -0.2043*education_degree + 0.2838*sex_m + -0.0702*sd_age + 0.0436*smoking_previous -0.2052*smoking_current + 0.1231*sd_tdi + -3.526
-	}
+        gen covidRiskPart = -0.2221*education_alevel + 0.1172*education_voc + -0.2043*education_degree + 0.2838*sex_m + -0.0702*sd_age + 0.0436*smoking_previous -0.2052*smoking_current + 0.1231*sd_tdi + -3.526
 	
 	gen pCovid=exp(covidRiskPart)/(1+exp(covidRiskPart))
 	gen covid = runiform() <= pCovid
@@ -76,65 +68,47 @@ while `i'<=`nSim' {
 	*** covid severity proxy – 3.13% of those with a SARS-CoV-2 infection died - from external source
 
 	* params from sheet 'death_outcome_all' in Alice's xlsx
-        gen deathCovidPart = -0.3682*education_alevel + -0.0496*education_voc + 0.0602*education_degree + 0.3475*sex_m + 0.9288*sd_age + 0.0261*smoking_previous + 0.5205*smoking_current + 0.0882*sd_tdi + -4.050
-        gen pCovidSeverity=exp(deathCovidPart)/(1+exp(deathCovidPart))
-        gen covidSeverity = runiform() <= pCovidSeverity if covid == 1
 
+	if ("`bmiEffect'" == "effect") {
+		gen deathCovidPart = log(3)*sd_bmi + -0.3682*education_alevel + -0.0496*education_voc + 0.0602*education_degree + 0.3475*sex_m + 0.9288*sd_age + 0.0261*smoking_previous + 0.5205*smoking_current + 0.0882*sd_tdi + -4.584
+	}
+	else if ("`bmiEffect'" == "null") {
+	        gen deathCovidPart = -0.3682*education_alevel + -0.0496*education_voc + 0.0602*education_degree + 0.3475*sex_m + 0.9288*sd_age + 0.0261*smoking_previous + 0.5205*smoking_current + 0.0882*sd_tdi + -4.017
+	}
+
+        gen pCovidSeverity=exp(deathCovidPart)/(1+exp(deathCovidPart))
+	gen covidSeverity = rbinomial(1,pCovidSeverity) if covid == 1
 	
 	***
 	*** selection - 4.329% are selected into our sample (have had a covid test taken)
 
-	* params from sheet 'test_outcome_all' in Alice's xlsx
-	if ("`setup'" == "all") {
-		di "generate selection with all indep vars"
-		if ("`covidSelectOR'" == "2") {
-			gen logitSelectPart = 0.1641*sd_bmi + -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi + log(2)*covid + -3.253
-		}
-		else if ("`covidSelectOR'" == "5") {
-			gen logitSelectPart = 0.1641*sd_bmi + -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi + log(5)*covid + -3.340
-		}
-		else if	("`covidSelectOR'" == "10") {
-			gen logitSelectPart = 0.1641*sd_bmi + -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi + log(10)*covid + -3.441
-		}
+	* generate probability of being selected using Poisson model
+        if ("`selInteractEffect'" == "nointeract") {
 
-	}
-	else if ("`setup'" == "bmi") {
-		di "generate selection with bmi only"
-		gen logitSelectPart = 0.1641*sd_bmi + -3.253
-	}
-	else if	("`setup'" == "covars") {
-		di "generate selection with covars only"
-		gen logitSelectPart =  -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi + -3.253
+		gen logp = XXXX*sd_bmi + XXXX*education_alevel + XXXX*education_voc + XXXX*education_degree + XXXX*sex_m + XXXX*sd_age + XXXX*smoking_previous + XXXX*smoking_current + XXXX*sd_tdi + XXXX*covid + XXXX
+
         }
-	else if	("`setup'" == "covid") {
-		di "generate selection with covid only"
-		gen logitSelectPart = log(2)*covid +  -3.253
+	else if ("`selInteractEffect'" == "plausible") {
+
+                gen covidBMIinteract = sd_bmi*covid
+		gen logp = XXXX*sd_bmi + XXXX*education_alevel + XXXX*education_voc + XXXX*education_degree + XXXX*sex_m + XXXX*sd_age + XXXX*smoking_previous + XXXX*smoking_current +	XXXX*sd_tdi + XXXX*covid + XXXX*covidBMIinteract + XXXX
+
         }
-	else if	("`setup'" == "bmi_covars") {
-		di "generate selection with bmi and covars"
-		gen logitSelectPart = 0.1641*sd_bmi + -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi + -3.253
-        }
-	else if ("`setup'" == "bmi_covid") {
-		di "generate selection with bmi and covid"
-		gen logitSelectPart = 0.1641*sd_bmi + log(2)*covid + -3.253
-        }
-	else if ("`setup'" == "covars_covid") {
-		di "generate selection with covars and covid
-		gen logitSelectPart = -0.2110*education_alevel + -0.0107*education_voc + -0.1461*education_degree + 0.1091*sex_m + 0.1061*sd_age + 0.1645*smoking_previous + 0.2874*smoking_current + 0.2118*sd_tdi + log(2)*covid + -3.253
-        }
-	else {
-		di "Valid setup not specified : `setup'"
-		exit, clear
-	}
 
 
-	gen pSelect=exp(logitSelectPart)/(1+exp(logitSelectPart))
-	gen selection1 = runiform() <= pSelect
+	# generate selection variable - whether you got a test
+        gen pSel = exp(logp)
+        summ pSel
+        gen selection1 = rbinomial(1,pSel)
+
 
 	* all those who died with covid were tested so set these to selected
 	gen selection = selection1
-	replace selection = 1 if covidSeverity == 1
-	
+
+	if ("`setup'" == "all" | strpos("`setup'","severity")>0) {
+		di "generate selection with severity"
+		replace selection = 1 if covidSeverity == 1
+	}
 	
 	***
 	*** tidy and check distributions

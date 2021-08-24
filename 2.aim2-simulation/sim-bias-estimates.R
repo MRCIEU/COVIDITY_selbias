@@ -18,22 +18,36 @@ printStats <- function(simres, trueeffect, strata, outfile) {
 
 
 	##
-	## calculate monte carlo standard error
+	## calculate bias monte carlo standard error
 	nsim = nrow(simres)
 
-	mcSE = sqrt((1/(nsim*(nsim-1))) * sum((simres$bias-meanbias)^2))
+	biasMCSE = sqrt((1/(nsim*(nsim-1))) * sum((simres$bias-meanbias)^2))
 
 
 	#print(paste0(strata, ": ", meanbias, ", ", mcSE))
 	#cat(paste0(meanbias, " (", mcSE, ")"), outfile, append=TRUE)
 
-	return(list(meanbias=meanbias, mcse=mcSE))
+
+	##
+	## coverage
+
+	simres$covered = simres$lower <= trueeffect & simres$upper >= trueeffect
+	cov = length(which(simres$covered==1))/nsim
+
+
+	##
+	## coverage MCSE
+
+	covMCSE = sqrt(cov*(1-cov)/nsim)
+
+
+	return(list(biasMean=meanbias, biasMCSE=biasMCSE, coverage=cov, coverageMCSE=covMCSE))
 
 }
 
-formatStat <- function(stat) {
+formatStat <- function(stat, dp=4) {
 
-	return(sprintf("%.4f", stat))
+	return(sprintf(paste0("%.",dp,"f"), stat))
 
 }
 
@@ -48,6 +62,8 @@ args = commandArgs(trailingOnly=TRUE)
 bmi_assoc = args[1]
 print(bmi_assoc)
 
+simType = args[2]
+print(simType)
 
 
 estimatesForSim <- function(bmi_assoc, setup, covidSelectOR) {
@@ -57,6 +73,23 @@ estimatesForSim <- function(bmi_assoc, setup, covidSelectOR) {
 	simres = read.table(paste0("out/sim-",bmi_assoc,"-", setup, "-", covidSelectOR, ".csv"), header=1, sep=",")
 	# columns: iter,strata,estimate,lower,upper
 
+
+	# remove any iterations where at least 1 regression did not converge
+
+	if ('conv' %in% colnames(simres)) {
+		iterRemove = unique(simres$iter[which(simres$conv==0)])
+
+		print(paste0('Number of iterations: ', length(unique(simres$iter)), '. Number of iterations containing a regression that did not converge: ', length(iterRemove)))
+		if (length(iterRemove)>0) {
+			ix = which(simres$iter %in% iterRemove)
+			simres = simres[-ix,]
+			print(paste0('Those iterations have been removed. Number of iterations included: ', length(unique(simres$iter))))
+		}
+	}	
+	else {
+		# no converge indicator column so all iterations should be included so stop if there aren't 5000 rows (1000 iters with 5 tests each) 
+		stopifnot(nrow(simres)==5000)
+	}
 
 	# set true beta in log odds, assoc of bmi with SARS-CoV-2 infection or COVID-19 severity
 
@@ -73,22 +106,30 @@ estimatesForSim <- function(bmi_assoc, setup, covidSelectOR) {
 
 
 	res = printStats(simres, trueeffect, "all")
-	resstr = paste0(formatStat(res$meanbias), " (", formatStat(res$mcse), ")")
+	resstr = paste0(formatStat(res$biasMean), " (", formatStat(res$biasMCSE), ")")
+	resstrCov = paste0(formatStat(res$coverage, 3), " (", formatStat(res$coverageMCSE), ")")
 
 	res = printStats(simres, trueeffect, "all-confadj")
-	resstr = paste(resstr, paste0(formatStat(res$meanbias), " (", formatStat(res$mcse), ")"), sep='\t')
+	resstr = paste(resstr, paste0(formatStat(res$biasMean), " (", formatStat(res$biasMCSE), ")"), sep='\t')
+	resstrCov = paste(resstrCov, paste0(formatStat(res$coverage, 3), " (", formatStat(res$coverageMCSE), ")"), sep='\t')
 
 	res = printStats(simres, trueeffect, "selected")
-	resstr = paste(resstr, paste0(formatStat(res$meanbias), " (", formatStat(res$mcse), ")"), sep='\t')
+	resstr = paste(resstr, paste0(formatStat(res$biasMean), " (", formatStat(res$biasMCSE), ")"), sep='\t')
+	resstrCov = paste(resstrCov, paste0(formatStat(res$coverage, 3), " (", formatStat(res$coverageMCSE), ")"), sep='\t')
 
 	res = printStats(simres, trueeffect, "selected-confadj")
-	resstr = paste(resstr, paste0(formatStat(res$meanbias), " (", formatStat(res$mcse), ")"), sep='\t')
+	resstr = paste(resstr, paste0(formatStat(res$biasMean), " (", formatStat(res$biasMCSE), ")"), sep='\t')
+	resstrCov = paste(resstrCov, paste0(formatStat(res$coverage, 3), " (", formatStat(res$coverageMCSE), ")"), sep='\t')
 
 	res = printStats(simres, trueeffect, "control-everyone")
-	resstr = paste(resstr, paste0(formatStat(res$meanbias), " (", formatStat(res$mcse), ")"), sep='\t')
+	resstr = paste(resstr, paste0(formatStat(res$biasMean), " (", formatStat(res$biasMCSE), ")"), sep='\t')
+	resstrCov = paste(resstrCov, paste0(formatStat(res$coverage, 3), " (", formatStat(res$coverageMCSE), ")"), sep='\t')
+
 
 	#cat(resstr, outfile, append=TRUE)
+	cat('-------- ', setup, '\n')
 	cat(resstr, '\n')
+	cat(resstrCov, '\n')
 
 }
 
@@ -103,11 +144,25 @@ estimatesForSim(bmi_assoc, "bmi_covars", 2)
 estimatesForSim(bmi_assoc, "bmi_covid", 2)
 estimatesForSim(bmi_assoc, "covars_covid", 2)
 
+if (simType == 'severity') {
+estimatesForSim(bmi_assoc, "severity", 2)
+estimatesForSim(bmi_assoc, "severity_covid", 2)
+estimatesForSim(bmi_assoc, "severity_covars", 2)
+estimatesForSim(bmi_assoc, "severity_bmi", 2)
+estimatesForSim(bmi_assoc, "severity_bmi_covars", 2)
+estimatesForSim(bmi_assoc, "severity_bmi_covid", 2)
+estimatesForSim(bmi_assoc, "severity_covars_covid", 2)
+estimatesForSim(bmi_assoc, "bmi_covars_covid", 2)
+}
+
+
 cat("OR=5 \n")
 estimatesForSim(bmi_assoc, "all", 5)
 
 cat("OR=10 \n")
 estimatesForSim(bmi_assoc, "all", 10)
+
+
 
 
 
