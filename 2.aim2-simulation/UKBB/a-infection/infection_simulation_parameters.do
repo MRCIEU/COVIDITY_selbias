@@ -28,7 +28,7 @@ matrix results = results[1..6,1..12]
 * Variable positive_test_negative_phase1 defines a case as a COVID-19 positive test and control as COVID-19 negative test
 
 * Regression
-logistic positive_`caseDef'_negative_phase1 i.eduyears_quali i.sex sd_age i.current_smoke sd_tdi, coef
+poisson positive_`caseDef'_negative_phase1 i.eduyears_quali i.sex sd_age i.current_smoke sd_tdi
 
 * Storing and formatting results
 matrix results = r(table)
@@ -41,7 +41,7 @@ matrix results = results[1..6,1..12]
 * Association of BMI/covariates with receiving a covid test in the whole UKBB sample
 
 * Regression
-logistic `caseDef'_phase1 sd_bmi i.eduyears_quali i.sex sd_age i.current_smoke sd_tdi, coef
+poisson `caseDef'_phase1 sd_bmi i.eduyears_quali i.sex sd_age i.current_smoke sd_tdi
 
 * Storing and formatting results
 matrix results = r(table)
