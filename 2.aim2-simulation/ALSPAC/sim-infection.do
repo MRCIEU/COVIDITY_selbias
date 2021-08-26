@@ -82,11 +82,12 @@ while `i'<=`nSim' {
 
 	***
 	*** selection - 19.974% are selected into our sample (responded to first covid questionnaire)
+	*** risk ratio = 5.80 for effect of SARS-CoV-2 infection on being tested
 	
 	* generate probability of being selected using Poisson model
 	if ("`selInteractEffect'" == "nointeract") {
 
-		gen logp = XXXX*sd_bmi + XXXX*education_alevel + XXXX*education_voc + XXXX*education_degree + XXXX*sex_m + XXXX*sd_age + XXXX*smoking_previous + XXXX*smoking_current + XXXX*imd  + XXXX*covid + XXXX
+		gen logp = 0.0208*sd_bmi + 0.3387*education_alevel + 0.1095*education_voc + 0.3408*education_degree +  0.2689*sex_m + 0.0162*sd_age + -0.0228*smoking_previous + -0.0594*smoking_current + -0.0175*imd  + log(5.80)*covid + XXXX
 
 	}
 	else if ("`selInteractEffect'" == "plausible") {
