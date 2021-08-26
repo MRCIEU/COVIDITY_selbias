@@ -88,7 +88,12 @@ while `i'<=`nSim' {
 		gen logp = XXXX*sd_bmi + XXXX*education_alevel + XXXX*education_voc + XXXX*education_degree + XXXX*sex_m + XXXX*sd_age + XXXX*smoking_previous + XXXX*smoking_current +	XXXX*sd_tdi + XXXX*covid + XXXX*covidBMIinteract + XXXX
 
         }
+	else if ("`selInteractEffect'" == "extreme") {
 
+                gen covidBMIinteract = sd_bmi*covid
+                gen logp = XXXX*sd_bmi + XXXX*education_alevel + XXXX*education_voc + XXXX*education_degree + XXXX*sex_m + XXXX*sd_age + XXXX*smoking_previous + XXXX*smoking_current + XXXX*sd_tdi + XXXX*covid + XXXX*covidBMIinteract + XXXX
+
+        }
 
 	# generate selection variable
         gen pSel = exp(logp)
