@@ -73,42 +73,88 @@ while `i'<=`nSim' {
 	gen covid = rbinomial(1,pCovid)		
 	
 	***
-	*** selection - 4.329% are selected into our sample (have had a covid test taken)
+	*** selection - 1.156% are selected into our sample (have had a covid test taken)
 	*** risk ratio = 5.05 for effect of SARS-CoV-2 infection on being tested
 
 	* generate probability of being selected using Poisson model
-        if ("`selInteractEffect'" == "nointeract") {
 
-		gen logp = 0.1617*sd_bmi + -0.2084*education_alevel + -0.0105*education_voc + -0.1443*education_degree + -0.1079*sex_m + 0.1047*sd_age + 0.1625*smoking_previous + 0.2835*smoking_current + 0.2088*sd_tdi + log(5.05)*covid + XXXX
+	# generate this anyway as we need it for the interaction versions
 
-        }
-	else if ("`selInteractEffect'" == "plausible") {
+	*gen logpx = 0.1617*sd_bmi + -0.2084*education_alevel + -0.0105*education_voc + -0.1443*education_degree + -0.1079*sex_m + 0.1047*sd_age + 0.1625*smoking_previous + 0.2835*smoking_current + 0.2088*sd_tdi + log(5.05)*covid -4.610
 
-                gen covidBMIinteract = sd_bmi*covid
-		gen logp = XXXX*sd_bmi + XXXX*education_alevel + XXXX*education_voc + XXXX*education_degree + XXXX*sex_m + XXXX*sd_age + XXXX*smoking_previous + XXXX*smoking_current +	XXXX*sd_tdi + XXXX*covid + XXXX*covidBMIinteract + XXXX
+	** covid model defined among those without and with covid separately
+	* without covid
+	gen logpx = 0.1617*sd_bmi + -0.2084*education_alevel + -0.0105*education_voc + -0.1443*education_degree + -0.1079*sex_m + 0.1047*sd_age + 0.1625*smoking_previous + 0.2835*smoking_current + 0.2088*sd_tdi -4.610 if covid == 0
+	* with covid
+	replace logpx = 0.1617*sd_bmi + -0.2084*education_alevel + -0.0105*education_voc + -0.1443*education_degree + -0.1079*sex_m + 0.1047*sd_age + 0.1625*smoking_previous + 0.2835*smoking_current + 0.2088*sd_tdi + log(5.05) -4.610 if covid == 1
 
+
+ 	gen pSelx = exp(logpx)
+        summ pSelx
+        gen selectionx = rbinomial(1,pSelx)
+	
+
+	if ("`selInteractEffect'" == "plausible") {
+
+		*local new_alphaxy = -0.162
+
+		local b1=0.187
+		local b2=`b1' - 0.162
+
+		summ sd_bmi if covid == 0
+		local mu0 = `r(mean)'
+		summ sd_bmi if covid == 1
+		local mu1 = `r(mean)'
+
+		local b = 0.1617
+		local a0 = -4.610
+		local c0 = log(5.05)
+
+		local A = `a0' + `b'*`mu0'
+		local B = `a0' + `c0' + `b'*`mu1'
+
+		local new_alpha0 = `A' - `b1'*`mu0'
+		local c = `B' - `b2'*`mu1' - `new_alpha0'
+
+		gen logpnew = `b1'*sd_bmi + -0.2084*education_alevel + -0.0105*education_voc + -0.1443*education_degree + -0.1079*sex_m + 0.1047*sd_age + 0.1625*smoking_previous + 0.2835*smoking_current + 0.2088*sd_tdi + `new_alpha0' if covid == 0
+		replace logpnew = `b2'*sd_bmi + -0.2084*education_alevel + -0.0105*education_voc + -0.1443*education_degree + -0.1079*sex_m + 0.1047*sd_age + 0.1625*smoking_previous + 0.2835*smoking_current + 0.2088*sd_tdi + `c' + `new_alpha0' if covid == 1
+		
         }
 	else if ("`selInteractEffect'" == "extreme") {
 
-                gen covidBMIinteract = sd_bmi*covid
-                gen logp = XXXX*sd_bmi + XXXX*education_alevel + XXXX*education_voc + XXXX*education_degree + XXXX*sex_m + XXXX*sd_age + XXXX*smoking_previous + XXXX*smoking_current + XXXX*sd_tdi + XXXX*covid + XXXX*covidBMIinteract + XXXX
+		local new_alphaxy = -0.245
+
+		* XXXXX TODO
 
         }
 
+
 	# generate selection variable
-        gen pSel = exp(logp)
+        gen pSel = exp(logpnew)
         summ pSel
         gen selection = rbinomial(1,pSel)
 
 	
-	
+	summ selection
+	summ selectionx
+
+	summ selection if covid==0
+	summ selection if covid==1
+	summ selectionx if covid==0
+	summ selectionx if covid==1
+
+	*poisson selection sd_bmi education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi covid
+	*poisson selectionx sd_bmi education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi covid
+	*poisson selection sd_bmi education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi covid covidBMIinteract
+
 	
 	***
 	*** tidy and check distributions
 	
-	drop covidRiskPart logp pSel pSelect pCovid
+	drop covidRiskPart logp pSel pCovid
+	drop logpx pSelx selectionx
 	
-	summ
+*	summ
 	
 	
 	***
