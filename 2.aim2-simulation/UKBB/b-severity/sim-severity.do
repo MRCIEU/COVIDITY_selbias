@@ -26,7 +26,7 @@ file write myfile2 "iter,strata,mean" _n
 
 
 * number of people in UKB sample
-local n = 421122
+local n = 421037
 
 local i = 1
 local nSim = 1000
