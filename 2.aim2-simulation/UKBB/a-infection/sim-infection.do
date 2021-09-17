@@ -16,7 +16,7 @@ di "BMI affects covid risk: `bmiEffect'"
 local selInteractEffect = "`2'"
 di "Interaction effect of BMI/sars-cov-2 on selection: `selInteractEffect'"
 
-log using "out/log-`bmiEffect'-`setup'-`covidSelectOR'.txt", text replace
+log using "out/log-`bmiEffect'-`selInteractEffect'.txt", text replace
 
 set seed 1234
 
