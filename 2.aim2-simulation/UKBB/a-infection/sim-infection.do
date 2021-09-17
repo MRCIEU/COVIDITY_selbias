@@ -22,9 +22,11 @@ set seed 1234
 
 file open myfile using "out/sim-`bmiEffect'-`selInteractEffect'.csv", write replace
 file open myfile2 using "out/sim-`bmiEffect'-`selInteractEffect'-summaries.csv", write replace
+file open myfile3 using "out/sim-`bmiEffect'-`selInteractEffect'-checking.csv", write replace
 
 file write myfile "iter,strata,estimate,lower,upper" _n
-file write myfile2 "iter,strata,mean" _n
+file write myfile2 "iter,variable,mean" _n
+file write myfile3 "iter,param,beta,lower,upper" _n
 
 
 * number of people in UKB sample
@@ -96,7 +98,7 @@ while `i'<=`nSim' {
 
 	if ("`selInteractEffect'" == "plausible") {
 
-		*local new_alphaxy = -0.162
+		* interaction size is -0.162
 
 		local b1=0.187
 		local b2=`b1' - 0.162
@@ -118,41 +120,68 @@ while `i'<=`nSim' {
 
 		gen logpnew = `b1'*sd_bmi + -0.2084*education_alevel + -0.0105*education_voc + -0.1443*education_degree + -0.1079*sex_m + 0.1047*sd_age + 0.1625*smoking_previous + 0.2835*smoking_current + 0.2088*sd_tdi + `new_alpha0' if covid == 0
 		replace logpnew = `b2'*sd_bmi + -0.2084*education_alevel + -0.0105*education_voc + -0.1443*education_degree + -0.1079*sex_m + 0.1047*sd_age + 0.1625*smoking_previous + 0.2835*smoking_current + 0.2088*sd_tdi + `c' + `new_alpha0' if covid == 1
-		
+
+		# generate selection variable
+	        gen pSel = exp(logpnew)
+	        summ pSel
+	        gen selection = rbinomial(1,pSel)
+
+		do ../../checking.do `i' "education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi"
+	
+		drop logpnew pSel
         }
 	else if ("`selInteractEffect'" == "extreme") {
 
-		local new_alphaxy = -0.245
+		* interaction size is -0.245
 
-		* XXXXX TODO
+		* b1 chosen to get the right params of poisson model
+		*local b1=0.260
+		*local b1=0.210
+		local b1=0.205
+		local b2=`b1' - 0.245
+
+		summ sd_bmi if covid == 0
+		local mu0 = `r(mean)'
+		summ sd_bmi if covid == 1
+		local mu1 = `r(mean)'
+
+		local b = 0.1617
+		local a0 = -4.610
+		local c0 = log(5.05)
+
+		local A = `a0' + `b'*`mu0'
+		local B = `a0' + `c0' + `b'*`mu1'
+
+		local new_alpha0 = `A' - `b1'*`mu0'
+		local c = `B' - `b2'*`mu1' - `new_alpha0'
+
+
+		gen logpnew = `b1'*sd_bmi + -0.2084*education_alevel + -0.0105*education_voc + -0.1443*education_degree + -0.1079*sex_m + 0.1047*sd_age + 0.1625*smoking_previous + 0.2835*smoking_current + 0.2088*sd_tdi + `new_alpha0' if covid == 0
+                replace logpnew = `b2'*sd_bmi + -0.2084*education_alevel + -0.0105*education_voc + -0.1443*education_degree + -0.1079*sex_m + 0.1047*sd_age + 0.1625*smoking_previous + 0.2835*smoking_current + 0.2088*sd_tdi + `c' + `new_alpha0' if covid == 1
+
+
+		# generate selection variable
+	        gen pSel = exp(logpnew)
+	        summ pSel
+	        gen selection = rbinomial(1,pSel)
+
+		do ../../checking.do `i' "education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi"
+
+		drop logpnew pSel
 
         }
+	else if ("`selInteractEffect'" == "nointeract") {
 
+		gen selection = selectionx
 
-	# generate selection variable
-        gen pSel = exp(logpnew)
-        summ pSel
-        gen selection = rbinomial(1,pSel)
+	}
 
 	
-	summ selection
-	summ selectionx
-
-	summ selection if covid==0
-	summ selection if covid==1
-	summ selectionx if covid==0
-	summ selectionx if covid==1
-
-	*poisson selection sd_bmi education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi covid
-	*poisson selectionx sd_bmi education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi covid
-	*poisson selection sd_bmi education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi covid covidBMIinteract
-
 	
 	***
 	*** tidy and check distributions
 	
-	drop covidRiskPart logp pSel pCovid
-	drop logpx pSelx selectionx
+	drop covidRiskPart pCovid logpx pSelx
 	
 *	summ
 	
@@ -170,6 +199,7 @@ while `i'<=`nSim' {
 
 file close myfile
 file close myfile2
+file close myfile3
 
 log close
 

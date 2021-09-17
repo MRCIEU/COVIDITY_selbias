@@ -7,8 +7,8 @@
 clear
 graph drop _all
 
-local covidSelectOR = "`1'"
-di "`covidSelectOR'"
+local bmiEffect = "`1'"
+di "BMI affects covid risk: `bmiEffect'"
 
 local selInteractEffect = "`2'"
 di "Interaction effect of BMI/sars-cov-2 on selection: `selInteractEffect'"
@@ -19,10 +19,11 @@ set seed 1234
 
 file open myfile using "out/sim-`bmiEffect'-`selInteractEffect'.csv", write replace
 file open myfile2 using "out/sim-`bmiEffect'-`selInteractEffect'-summaries.csv", write replace
-
+file open myfile3 using "out/sim-`bmiEffect'-`selInteractEffect'-checking.csv", write replace
 
 file write myfile "iter,strata,estimate,lower,upper,n,conv" _n
-file write myfile2 "iter,strata,mean" _n
+file write myfile2 "iter,variable,mean" _n
+file write myfile3 "iter,param,beta,lower,upper" _n
 
 
 * number of people in UKB sample
@@ -57,12 +58,12 @@ while `i'<=`nSim' {
 	
 
 	***
-	*** covid risk - 3.16% – from external source
+	*** covid risk - 3.13% – from external source
 
         gen covidRiskPart = -0.2221*education_alevel + 0.1172*education_voc + -0.2043*education_degree + 0.2838*sex_m + -0.0702*sd_age + 0.0436*smoking_previous -0.2052*smoking_current + 0.1231*sd_tdi + -3.526
 	
 	gen pCovid=exp(covidRiskPart)/(1+exp(covidRiskPart))
-	gen covid = runiform() <= pCovid
+	gen covid = rbinomial(1,pCovid)	
 
 	***
 	*** covid severity proxy – 3.13% of those with a SARS-CoV-2 infection died - from external source
@@ -80,32 +81,102 @@ while `i'<=`nSim' {
 	gen covidSeverity = rbinomial(1,pCovidSeverity) if covid == 1
 	
 	***
-	*** selection - 4.329% are selected into our sample (have had a covid test taken)
+	*** selection - 1.156% are selected into our sample (have had a covid test taken)
 	*** risk ratio = 5.05 for effect of SARS-CoV-2 infection on being tested
 
-	* generate probability of being selected using Poisson model
-        if ("`selInteractEffect'" == "nointeract") {
+	** covid model defined among those without and with covid separately
+	* without covid
+	gen logpx = 0.1617*sd_bmi + -0.2084*education_alevel + -0.0105*education_voc + -0.1443*education_degree + -0.1079*sex_m + 0.1047*sd_age + 0.1625*smoking_previous + 0.2835*smoking_current + 0.2088*sd_tdi -4.610 if covid == 0
+	* with covid
+	replace logpx = 0.1617*sd_bmi + -0.2084*education_alevel + -0.0105*education_voc + -0.1443*education_degree + -0.1079*sex_m + 0.1047*sd_age + 0.1625*smoking_previous + 0.2835*smoking_current + 0.2088*sd_tdi + log(5.05) -4.610 if covid == 1
 
-                gen logp = 0.1617*sd_bmi + -0.2084*education_alevel + -0.0105*education_voc + -0.1443*education_degree + -0.1079*sex_m + 0.1047*sd_age + 0.1625*smoking_previous + 0.2835*smoking_current + 0.2088*sd_tdi + log(5.05)*covid + XXXX
 
-        }
-	else if ("`selInteractEffect'" == "plausible") {
+ 	gen pSelx = exp(logpx)
+        summ pSelx
+        gen selectionx = rbinomial(1,pSelx)
+	
 
-                gen covidBMIinteract = sd_bmi*covid
-		gen logp = XXXX*sd_bmi + XXXX*education_alevel + XXXX*education_voc + XXXX*education_degree + XXXX*sex_m + XXXX*sd_age + XXXX*smoking_previous + XXXX*smoking_current +	XXXX*sd_tdi + XXXX*covid + XXXX*covidBMIinteract + XXXX
+	if ("`selInteractEffect'" == "plausible") {
 
+		* interaction size is -0.162
+
+		local b1=0.187
+		local b2=`b1' - 0.162
+
+		summ sd_bmi if covid == 0
+		local mu0 = `r(mean)'
+		summ sd_bmi if covid == 1
+		local mu1 = `r(mean)'
+
+		local b = 0.1617
+		local a0 = -4.610
+		local c0 = log(5.05)
+
+		local A = `a0' + `b'*`mu0'
+		local B = `a0' + `c0' + `b'*`mu1'
+
+		local new_alpha0 = `A' - `b1'*`mu0'
+		local c = `B' - `b2'*`mu1' - `new_alpha0'
+
+		gen logpnew = `b1'*sd_bmi + -0.2084*education_alevel + -0.0105*education_voc + -0.1443*education_degree + -0.1079*sex_m + 0.1047*sd_age + 0.1625*smoking_previous + 0.2835*smoking_current + 0.2088*sd_tdi + `new_alpha0' if covid == 0
+		replace logpnew = `b2'*sd_bmi + -0.2084*education_alevel + -0.0105*education_voc + -0.1443*education_degree + -0.1079*sex_m + 0.1047*sd_age + 0.1625*smoking_previous + 0.2835*smoking_current + 0.2088*sd_tdi + `c' + `new_alpha0' if covid == 1
+
+		# generate selection variable
+	        gen pSel = exp(logpnew)
+	        summ pSel
+	        gen selection = rbinomial(1,pSel)
+
+		do ../../checking.do `i' "education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi"
+		
+		rename selection selection1
+		
+		drop logpnew pSel
         }
 	else if ("`selInteractEffect'" == "extreme") {
 
-                gen covidBMIinteract = sd_bmi*covid
-                gen logp = XXXX*sd_bmi + XXXX*education_alevel + XXXX*education_voc + XXXX*education_degree + XXXX*sex_m + XXXX*sd_age + XXXX*smoking_previous + XXXX*smoking_current + XXXX*sd_tdi + XXXX*covid + XXXX*covidBMIinteract + XXXX
+		* interaction size is -0.245
+
+		* b1 chosen to get the right params of poisson model
+		local b1=0.205
+		local b2=`b1' - 0.245
+
+		summ sd_bmi if covid == 0
+		local mu0 = `r(mean)'
+		summ sd_bmi if covid == 1
+		local mu1 = `r(mean)'
+
+		local b = 0.1617
+		local a0 = -4.610
+		local c0 = log(5.05)
+
+		local A = `a0' + `b'*`mu0'
+		local B = `a0' + `c0' + `b'*`mu1'
+
+		local new_alpha0 = `A' - `b1'*`mu0'
+		local c = `B' - `b2'*`mu1' - `new_alpha0'
+
+
+		gen logpnew = `b1'*sd_bmi + -0.2084*education_alevel + -0.0105*education_voc + -0.1443*education_degree + -0.1079*sex_m + 0.1047*sd_age + 0.1625*smoking_previous + 0.2835*smoking_current + 0.2088*sd_tdi + `new_alpha0' if covid == 0
+                replace logpnew = `b2'*sd_bmi + -0.2084*education_alevel + -0.0105*education_voc + -0.1443*education_degree + -0.1079*sex_m + 0.1047*sd_age + 0.1625*smoking_previous + 0.2835*smoking_current + 0.2088*sd_tdi + `c' + `new_alpha0' if covid == 1
+
+
+		# generate selection variable
+	        gen pSel = exp(logpnew)
+	        summ pSel
+	        gen selection = rbinomial(1,pSel)
+
+		do ../../checking.do `i' "education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi"
+
+		rename selection selection1
+
+		drop logpnew pSel
 
         }
+	else if ("`selInteractEffect'" == "nointeract") {
 
-	# generate selection variable - whether you got a test
-        gen pSel = exp(logp)
-        summ pSel
-        gen selection1 = rbinomial(1,pSel)
+		gen selection1 = selectionx
+
+	}
 
 
 	* all those who died with covid were tested so set these to selected
@@ -119,7 +190,7 @@ while `i'<=`nSim' {
 	***
 	*** tidy and check distributions
 	
-	drop logitSelectPart covidRiskPart pSelect pCovid
+	drop covidRiskPart pCovid deathCovidPart logp*
 	
 	summ
 	

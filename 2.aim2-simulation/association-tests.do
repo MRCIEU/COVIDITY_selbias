@@ -18,6 +18,8 @@ local covars = "`2'"
 	file write myfile2 %04.0f (`i') ",covid," %7.6f (`r(mean)') _n
 	summ selection
 	file write myfile2 %04.0f (`i') ",selection," %7.6f (`r(mean)') _n
+	summ selectionx
+        file write myfile2 %04.0f (`i') ",selectionx," %7.6f (`r(mean)') _n
 
 	***
 	*** association tests
