@@ -5,17 +5,12 @@
 clear
 
 
-* either effect or null for simulations where bmi has an effect or no effect on covid risk (the hypothesis we are testing)
-local bmi_assoc = "`1'"
-di "`bmi_assoc'"
+local bmiEffect = "`1'"
+di "BMI affects covid risk: `bmiEffect'"
 
-* relates to the edges including in the dag (specifically what has a direct effect on selection)
-local setup = "`2'"
-di "`setup'"
+local selInteractEffect = "`2'"
+di "Interaction effect of BMI/sars-cov-2 on selection: `selInteractEffect'"
 
-* OR of covid on selection
-local covidSelectOR = "`3'"
-di "`covidSelectOR'"
 
 
 **
@@ -23,19 +18,22 @@ di "`covidSelectOR'"
 
 graph drop _all
 
-insheet using "out/sim-`bmi_assoc'-`setup'-`covidSelectOR'.csv"
+di "out/sim-`bmiEffect'-`selInteractEffect'.csv"
+
+insheet using "out/sim-`bmiEffect'-`selInteractEffect'.csv"
 
 
 summ
 
-*replace estimate = log(estimate)
 
 set scheme s1mono
 
 * set xrange depending on the simulation
-if ("`bmi_assoc'" == "effect") {
-	local xmin = 0.6
-	local xmax = 1.6
+if ("`bmiEffect'" == "effect") {
+*	local xmin = -0.2
+*	local xmax = 2.6
+	local xmin = 0.7
+	local xmax = 1.4
 }
 else {
 	local xmin = -0.4
@@ -48,13 +46,14 @@ else {
 
 di "xmin `xmin' xmax `xmax'"
 
-twoway (histogram estimate if strata == "all", color(red%30)) ///        
-	(histogram estimate if strata == "all-confadj", color(blue%30)) ///
-	(histogram estimate if strata == "selected", color(green%30)) ///   
-	(histogram estimate if strata == "selected-confadj", color(grey%30)) ///
-	(histogram estimate if strata == "control-everyone", color(purple%30)), ///
+twoway (histogram estimate if strata == "all", color(eltblue%40)) ///        
+	(histogram estimate if strata == "all-confadj", color(ebblue%40)) ///
+	(histogram estimate if strata == "selected", color(teal%40)) ///   
+	(histogram estimate if strata == "selected-confadj", color(midgreen%40)) ///
+	(histogram estimate if strata == "control-everyone", color(purple%20)), ///
 	legend(order(1 "All" 2 "All: conf adjusted" 3 "Selected" 4 "Selected: conf adj" 5 "All controls=everyone")) ///
-	xscale(r(`xmin' `xmax')) xlabel(`xmin'(0.1)`xmax')
+	xscale(r(`xmin' `xmax')) xlabel(`xmin'(0.2)`xmax') ///
+	xtitle("Log odds")
 
 
-graph export "out/sim-main-`bmi_assoc'-`setup'-`covidSelectOR'.pdf", replace
+graph export "out/sim-main-`bmiEffect'-`selInteractEffect'.pdf", replace
