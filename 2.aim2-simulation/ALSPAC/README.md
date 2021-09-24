@@ -23,7 +23,7 @@ stata -b sim-hists-all.do
 Generate the average bias and monte carlo SE for each simulation version
 
 ```bash
-Rscript ../sim-bias-estimates.R null "infection"
-Rscript ../sim-bias-estimates.R effect "infection"
+Rscript ../sim-bias-estimates.R null
+Rscript ../sim-bias-estimates.R effect
 ```
 
