@@ -59,18 +59,16 @@ formatStat <- function(stat, dp=4) {
 args = commandArgs(trailingOnly=TRUE)
 
 # either effect or null for simulations where bmi has an effect or no effect on covid risk (the hypothesis we are testing)
-bmi_assoc = args[1]
-print(bmi_assoc)
-
-simType = args[2]
-print(simType)
+bmiEffect = args[1]
+print(bmiEffect)
 
 
-estimatesForSim <- function(bmi_assoc, setup, covidSelectOR) {
+
+estimatesForSim <- function(bmiEffect, selInteractEffect) {
 
 	# load in the simulation results
 
-	simres = read.table(paste0("out/sim-",bmi_assoc,"-", setup, "-", covidSelectOR, ".csv"), header=1, sep=",")
+	simres = read.table(paste0("out/sim-",bmiEffect,"-", selInteractEffect, ".csv"), header=1, sep=",")
 	# columns: iter,strata,estimate,lower,upper
 
 
@@ -94,13 +92,13 @@ estimatesForSim <- function(bmi_assoc, setup, covidSelectOR) {
 	# set true beta in log odds, assoc of bmi with SARS-CoV-2 infection or COVID-19 severity
 
 	trueeffect = log(1)
-	if (bmi_assoc == "effect") {
+	if (bmiEffect == "effect") {
 		trueeffect = log(3)
 	}
 	
 	# calculate average bias of simulation iterations for each version
 
-	outfile=paste0("out/sim-",bmi_assoc, ".csv")
+	outfile=paste0("out/sim-",bmiEffect, ".csv")
 
 	#print("strata: meanbias, mcSE")
 
@@ -127,40 +125,24 @@ estimatesForSim <- function(bmi_assoc, setup, covidSelectOR) {
 
 
 	#cat(resstr, outfile, append=TRUE)
-	cat('-------- ', setup, '\n')
-	cat(resstr, '\n')
-	cat(resstrCov, '\n')
+	cat('bias,', resstr, '\n')
+	cat('coverage,', resstrCov, '\n')
 
 }
 
 
 
-cat("OR=2 \n")
-estimatesForSim(bmi_assoc, "all", 2)
-estimatesForSim(bmi_assoc, "bmi", 2)
-estimatesForSim(bmi_assoc, "covars", 2)
-estimatesForSim(bmi_assoc, "covid", 2)
-estimatesForSim(bmi_assoc, "bmi_covars", 2)
-estimatesForSim(bmi_assoc, "bmi_covid", 2)
-estimatesForSim(bmi_assoc, "covars_covid", 2)
+cat("No interact \n")
+estimatesForSim(bmiEffect, "nointeract")
 
-if (simType == 'severity') {
-estimatesForSim(bmi_assoc, "severity", 2)
-estimatesForSim(bmi_assoc, "severity_covid", 2)
-estimatesForSim(bmi_assoc, "severity_covars", 2)
-estimatesForSim(bmi_assoc, "severity_bmi", 2)
-estimatesForSim(bmi_assoc, "severity_bmi_covars", 2)
-estimatesForSim(bmi_assoc, "severity_bmi_covid", 2)
-estimatesForSim(bmi_assoc, "severity_covars_covid", 2)
-estimatesForSim(bmi_assoc, "bmi_covars_covid", 2)
-}
+cat("Plausible \n")
+estimatesForSim(bmiEffect, "plausible")
+
+cat("Extreme \n")
+estimatesForSim(bmiEffect, "extreme")
 
 
-cat("OR=5 \n")
-estimatesForSim(bmi_assoc, "all", 5)
 
-cat("OR=10 \n")
-estimatesForSim(bmi_assoc, "all", 10)
 
 
 
