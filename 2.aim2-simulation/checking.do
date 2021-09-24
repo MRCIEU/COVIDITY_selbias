@@ -14,7 +14,6 @@ local covars = "`2'"
 * using selection generated with an interaction
 
 poisson selection sd_bmi covid `covars' 
-*poisson selection sd_bmi education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi covid
 local beta _b[sd_bmi]
 local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
@@ -29,7 +28,6 @@ file write myfile3 %04.0f (`i') ",covid," %7.6f (`beta') "," %7.6f (`ciL') "," %
 * using selectionx generated without an interaction (i.e. main effects only)
 
 poisson selectionx sd_bmi covid `covars'
-*poisson selectionx sd_bmi education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi covid
 local beta _b[sd_bmi]
 local ciL _b[sd_bmi] - 1.96 * _se[sd_bmi]
 local ciU _b[sd_bmi] + 1.96 * _se[sd_bmi]
