@@ -9,6 +9,13 @@ All simulations are run on Blue Crystal phase 3, see job files in the `jobs` dir
 
 
 
+## Check sim generated data
+
+```bash
+stata mainCheckSims.do
+```
+
+
 ## Plot results:
 
 ```bash
