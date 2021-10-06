@@ -13,15 +13,15 @@ local covars = "`2'"
 
 
 	summ sd_bmi
-	file write myfile2 %04.0f (`i') ",sd_bmi," %7.6f (`r(mean)') _n
+	file write myfile2 %04.0f (`i') ",sd_bmi," %7.6f (`r(mean)') "," %7.6f (`r(min)') "," %7.6f (`r(max)') _n
 	summ covid
-	file write myfile2 %04.0f (`i') ",covid," %7.6f (`r(mean)') _n
+	file write myfile2 %04.0f (`i') ",covid," %7.6f (`r(mean)') "," %7.6f (`r(min)') "," %7.6f (`r(max)') _n
 	summ selection1
-        file write myfile2 %04.0f (`i') ",selection1," %7.6f (`r(mean)') _n
+        file write myfile2 %04.0f (`i') ",selection1," %7.6f (`r(mean)') "," %7.6f (`r(min)') "," %7.6f (`r(max)') _n
 	summ selection
-	file write myfile2 %04.0f (`i') ",selection," %7.6f (`r(mean)') _n
+	file write myfile2 %04.0f (`i') ",selection," %7.6f (`r(mean)') "," %7.6f (`r(min)') "," %7.6f (`r(max)') _n
 	summ selectionx
-        file write myfile2 %04.0f (`i') ",selectionx," %7.6f (`r(mean)') _n
+        file write myfile2 %04.0f (`i') ",selectionx," %7.6f (`r(mean)') "," %7.6f (`r(min)') "," %7.6f (`r(max)') _n
 
 	***
 	*** association tests

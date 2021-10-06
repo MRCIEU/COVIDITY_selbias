@@ -24,7 +24,7 @@ file open myfile2 using "out/sim-`bmiEffect'-`selInteractEffect'`largeN'-summari
 file open myfile3 using "out/sim-`bmiEffect'-`selInteractEffect'`largeN'-checking.csv", write replace
 
 file write myfile "iter,strata,estimate,lower,upper,n,conv" _n
-file write myfile2 "iter,variable,mean" _n
+file write myfile2 "iter,variable,mean,min,max" _n
 file write myfile3 "iter,param,beta,lower,upper" _n
 
 
