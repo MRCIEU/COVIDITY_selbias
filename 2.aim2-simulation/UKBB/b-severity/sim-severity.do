@@ -103,6 +103,12 @@ while `i'<=`nSim' {
 
  	gen pSelx = exp(logpx)
         summ pSelx
+
+	count if pSelx>1           
+	if (`r(N)'>0) {
+		di "SIM ISSUE: invalid probabilities (plausible)"
+	}
+
         gen selectionx = rbinomial(1,pSelx)
 	
 
@@ -134,6 +140,12 @@ while `i'<=`nSim' {
 		* generate selection variable
 	        gen pSel = exp(logpnew)
 	        summ pSel
+
+		count if pSel>1
+		if (`r(N)'>0) {
+			di "SIM ISSUE: invalid probabilities (plausible)"
+		}
+
 	        gen selection = rbinomial(1,pSel)
 
 		do ../../checking.do `i' "education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi"
@@ -173,6 +185,12 @@ while `i'<=`nSim' {
 		* generate selection variable
 	        gen pSel = exp(logpnew)
 	        summ pSel
+
+		count if pSel>1
+		if (`r(N)'>0) {
+			di "SIM ISSUE: invalid probabilities (plausible)"
+		}
+
 	        gen selection = rbinomial(1,pSel)
 
 		do ../../checking.do `i' "education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current sd_tdi"
