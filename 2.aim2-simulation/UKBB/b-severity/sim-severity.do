@@ -48,7 +48,7 @@ while `i'<=`nSim' {
 	set obs `n'
 	
 	* set up confounders
-	gen edu_rand = uniform()
+	gen edu_rand = runiform()
 	gen education_alevel = edu_rand < 0.0541
 	gen education_voc = edu_rand >= 0.0541 & edu_rand < 0.0541+0.2803
 	gen education_degree = edu_rand >= 0.0541+0.2803 & edu_rand < 0.0541+0.2803+0.3332
@@ -58,7 +58,7 @@ while `i'<=`nSim' {
 	gen sd_tdi = rnormal(0,1)
 
 	* smoking - never versus current versus previous
-	gen smoke_rand = uniform()
+	gen smoke_rand = runiform()
 	gen smoking_current = smoke_rand < 0.0989
 	gen smoking_previous = smoke_rand >=0.0989 & smoke_rand < 0.0989+0.3409
 
