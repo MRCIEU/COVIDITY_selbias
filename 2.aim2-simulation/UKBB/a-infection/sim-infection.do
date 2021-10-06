@@ -169,7 +169,7 @@ while `i'<=`nSim' {
                 replace logpnew = `b2'*sd_bmi + -0.2084*education_alevel + -0.0105*education_voc + -0.1443*education_degree + -0.1079*sex_m + 0.1047*sd_age + 0.1625*smoking_previous + 0.2835*smoking_current + 0.2088*sd_tdi + `c' + `new_alpha0' if covid == 1
 
 
-		# generate selection variable
+		* generate selection variable
 	        gen pSel = exp(logpnew)
 	        summ pSel
 	        gen selection = rbinomial(1,pSel)
