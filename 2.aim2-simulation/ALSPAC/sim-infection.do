@@ -15,20 +15,30 @@ di "BMI affects covid risk: `bmiEffect'"
 local selInteractEffect = "`2'"
 di "Interaction effect of BMI/sars-cov-2 on selection: `selInteractEffect'"
 
-log using "out/log-`bmiEffect'-`selInteractEffect'.txt", text replace
+local largeN = "`3'"
+
+log using "out/log-`bmiEffect'-`selInteractEffect'`largeN'.txt", text replace
 
 set seed 1234
 
-file open myfile using "out/sim-`bmiEffect'-`selInteractEffect'.csv", write replace
-file open myfile2 using "out/sim-`bmiEffect'-`selInteractEffect'-summaries.csv", write replace
-file open myfile3 using "out/sim-`bmiEffect'-`selInteractEffect'-checking.csv", write replace
+file open myfile using "out/sim-`bmiEffect'-`selInteractEffect'`largeN'.csv", write replace
+file open myfile2 using "out/sim-`bmiEffect'-`selInteractEffect'`largeN'-summaries.csv", write replace
+file open myfile3 using "out/sim-`bmiEffect'-`selInteractEffect'`largeN'-checking.csv", write replace
 
 file write myfile "iter,strata,estimate,lower,upper" _n
 file write myfile2 "iter,variable,mean" _n
 file write myfile3 "iter,param,beta,lower,upper" _n
 
 
-local n = 14849
+if ("`largeN'" == "1") {
+	local n = 5000000
+	di "N LARGE 5000000"
+}
+else {
+	local n = 14849
+	di "N 14849"
+}
+
 
 local i = 1
 local nSim = 1000
