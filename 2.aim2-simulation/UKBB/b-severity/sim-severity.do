@@ -15,8 +15,15 @@ di "Interaction effect of BMI/sars-cov-2 on selection: `selInteractEffect'"
 
 local largeN = "`3'"
 
+local jobarray = `4'
+
 log using "out/log-`bmiEffect'-`selInteractEffect'`largeN'.txt", text replace
 
+* set random numbers using streams and seeds
+set rng mt64s
+local streamNum = 4000+`jobarray'
+di "stream number: `streamNum'"
+set rngstream `streamNum'
 set seed 1234
 
 file open myfile using "out/sim-`bmiEffect'-`selInteractEffect'`largeN'.csv", write replace
@@ -40,7 +47,7 @@ else {
 
 
 local i = 1
-local nSim = 1000
+local nSim = 50
 
 while `i'<=`nSim' {
 			

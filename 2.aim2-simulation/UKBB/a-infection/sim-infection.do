@@ -18,13 +18,21 @@ di "Interaction effect of BMI/sars-cov-2 on selection: `selInteractEffect'"
 
 local largeN = "`3'"
 
-log using "out/log-`bmiEffect'-`selInteractEffect'.txt", text replace
+local jobarray = `4'
+
+log using "out/log-`bmiEffect'-`selInteractEffect'`largeN'-`jobarray'.txt", text replace
+
+* set random numbers using streams and seeds
+set rng mt64s
+local streamNum = 4000+`jobarray'
+di "stream number: `streamNum'"
+set rngstream `streamNum'
 
 set seed 1234
 
-file open myfile using "out/sim-`bmiEffect'-`selInteractEffect'`largeN'.csv", write replace
-file open myfile2 using "out/sim-`bmiEffect'-`selInteractEffect'`largeN'-summaries.csv", write replace
-file open myfile3 using "out/sim-`bmiEffect'-`selInteractEffect'`largeN'-checking.csv", write replace
+file open myfile using "out/sim-`bmiEffect'-`selInteractEffect'`largeN'-`jobarray'.csv", write replace
+file open myfile2 using "out/sim-`bmiEffect'-`selInteractEffect'`largeN'-summaries-`jobarray'.csv", write replace
+file open myfile3 using "out/sim-`bmiEffect'-`selInteractEffect'`largeN'-checking-`jobarray'.csv", write replace
 
 file write myfile "iter,strata,n,estimate,lower,upper" _n
 file write myfile2 "iter,variable,mean,min,max" _n
@@ -42,7 +50,7 @@ else {
 }
 
 local i = 1
-local nSim = 1000
+local nSim = 50
 
 while `i'<=`nSim' {
 			
