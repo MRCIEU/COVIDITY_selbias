@@ -217,10 +217,8 @@ while `i'<=`nSim' {
 	* all those who died with covid were tested so set these to selected
 	gen selection = selection1
 
-	if ("`setup'" == "all" | strpos("`setup'","severity")>0) {
-		di "generate selection with severity"
-		replace selection = 1 if covidSeverity == 1
-	}
+	di "generate selection with severity"
+	replace selection = 1 if covidSeverity == 1
 	
 	***
 	*** tidy and check distributions
