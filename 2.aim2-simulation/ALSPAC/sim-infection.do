@@ -143,6 +143,8 @@ while `i'<=`nSim' {
 		local new_alpha0 = `A' - `b1'*`mu0'
 		local c = `B' - `b2'*`mu1' - `new_alpha0'
 
+		di "interaction params: `a0' `b1' `b2' `c'"
+
 		gen logpnew = `b1'*sd_bmi + 0.3387*education_alevel + 0.1095*education_voc + 0.3408*education_degree +  -0.2689*sex_m + 0.0162*sd_age + -0.0228*smoking_previous + -0.0594*smoking_current + -0.0175*imd + `new_alpha0' if covid == 0
 		replace logpnew = `b2'*sd_bmi + 0.3387*education_alevel + 0.1095*education_voc + 0.3408*education_degree +  -0.2689*sex_m + 0.0162*sd_age + -0.0228*smoking_previous + -0.0594*smoking_current + -0.0175*imd  + `c' + `new_alpha0' if covid == 1
 
@@ -183,6 +185,8 @@ while `i'<=`nSim' {
 
 		local new_alpha0 = `A' - `b1'*`mu0'
 		local c = `B' - `b2'*`mu1' - `new_alpha0'
+
+		di "interaction params: `a0' `b1' `b2' `c'"
 
 		gen logpnew = `b1'*sd_bmi + 0.3387*education_alevel + 0.1095*education_voc + 0.3408*education_degree +  -0.2689*sex_m + 0.0162*sd_age + -0.0228*smoking_previous + -0.0594*smoking_current + -0.0175*imd + `new_alpha0' if covid == 0
                 replace logpnew = `b2'*sd_bmi + 0.3387*education_alevel + 0.1095*education_voc + 0.3408*education_degree +  -0.2689*sex_m + 0.0162*sd_age + -0.0228*smoking_previous + -0.0594*smoking_current + -0.0175*imd  + `c' + `new_alpha0' if covid == 1
