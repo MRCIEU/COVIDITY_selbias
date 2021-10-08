@@ -17,7 +17,7 @@ local largeN = "`3'"
 
 local jobarray = `4'
 
-log using "out/log-`bmiEffect'-`selInteractEffect'`largeN'.txt", text replace
+log using "out/log-`bmiEffect'-`selInteractEffect'`largeN'-`jobarray'.txt", text replace
 
 * set random numbers using streams and seeds
 set rng mt64s
@@ -26,9 +26,9 @@ di "stream number: `streamNum'"
 set rngstream `streamNum'
 set seed 1234
 
-file open myfile using "out/sim-`bmiEffect'-`selInteractEffect'`largeN'.csv", write replace
-file open myfile2 using "out/sim-`bmiEffect'-`selInteractEffect'`largeN'-summaries.csv", write replace
-file open myfile3 using "out/sim-`bmiEffect'-`selInteractEffect'`largeN'-checking.csv", write replace
+file open myfile using "out/sim-`bmiEffect'-`selInteractEffect'`largeN'-`jobarray'.csv", write replace
+file open myfile2 using "out/sim-`bmiEffect'-`selInteractEffect'`largeN'-summaries-`jobarray'.csv", write replace
+file open myfile3 using "out/sim-`bmiEffect'-`selInteractEffect'`largeN'-checking-`jobarray'.csv", write replace
 
 file write myfile "iter,strata,estimate,lower,upper,n,conv" _n
 file write myfile2 "iter,variable,mean,min,max" _n
