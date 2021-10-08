@@ -3,7 +3,7 @@
 *.Rdata
 *.out
 *.log
-*.file
+*.file*
 *.sh.e*
 off
 *.pdf
