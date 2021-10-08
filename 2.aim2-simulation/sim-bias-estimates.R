@@ -62,13 +62,25 @@ args = commandArgs(trailingOnly=TRUE)
 bmiEffect = args[1]
 print(bmiEffect)
 
+large = args[2]
+print(large)
 
-
-estimatesForSim <- function(bmiEffect, selInteractEffect) {
+estimatesForSim <- function(bmiEffect, selInteractEffect, large) {
 
 	# load in the simulation results
 
-	simres = read.table(paste0("out/sim-",bmiEffect,"-", selInteractEffect, ".csv"), header=1, sep=",")
+
+	for (i in 1:20) {
+		if (i == 1) {
+			simres = read.table(paste0("out/sim-",bmiEffect,"-", selInteractEffect, large, "-", i,".csv"), header=1, sep=",")
+		}
+		else {
+			simresthis = read.table(paste0("out/sim-",bmiEffect,"-", selInteractEffect, large, "-", i,".csv"), header=1, sep=",")
+			simres = rbind(simres,simresthis)
+		}
+	}
+	write.table(simres, paste0("out/sim-",bmiEffect,"-", selInteractEffect, large, "all.csv"), row.names=FALSE, sep=',')
+
 	# columns: iter,strata,estimate,lower,upper
 
 
@@ -133,13 +145,13 @@ estimatesForSim <- function(bmiEffect, selInteractEffect) {
 
 
 cat("No interact \n")
-estimatesForSim(bmiEffect, "nointeract")
+estimatesForSim(bmiEffect, "nointeract", large)
 
 cat("Plausible \n")
-estimatesForSim(bmiEffect, "plausible")
+estimatesForSim(bmiEffect, "plausible", large)
 
 cat("Extreme \n")
-estimatesForSim(bmiEffect, "extreme")
+estimatesForSim(bmiEffect, "extreme", large)
 
 
 
