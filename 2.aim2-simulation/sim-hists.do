@@ -20,8 +20,7 @@ graph drop _all
 
 di "out/sim-`bmiEffect'-`selInteractEffect'.csv"
 
-insheet using "out/sim-`bmiEffect'-`selInteractEffect'.csv"
-
+insheet using "out/sim-`bmiEffect'-`selInteractEffect'0all.csv"
 
 summ
 
