@@ -86,9 +86,8 @@ while `i'<=`nSim' {
 
 
 	* WE USE SD BMI
-	gen sd_bmi =  -0.1502*education_alevel + 0.1064*education_voc + -0.2645*education_degree + 0.0409*sex_m + 0.0044*sd_age + 0.1202*smoking_previous + 0.0346*smoking_current + 0.0764*imd -0.084 + rnormal(0,0.985)
+	gen sd_bmi =  -0.1502*education_alevel + 0.1064*education_voc + -0.2645*education_degree + 0.0409*sex_m + 0.0044*sd_age + 0.1202*smoking_previous + 0.0346*smoking_current + 0.0764*imd -0.0845 + rnormal(0,0.985)
 *	regress sd_bmi education_alevel education_voc education_degree sex_m sd_age smoking_previous smoking_current imd
-		
 
 	***
 	*** covid risk - 7.20% - from external source
