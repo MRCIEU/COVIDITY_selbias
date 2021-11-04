@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l walltime=10:00:00,nodes=1:ppn=1
+#PBS -l walltime=20:00:00,nodes=1:ppn=1
 #PBS -o output-sim-main-bmieffect-nointeract-largen.file
 #PBS -t 1-20 
 #---------------------------------------------
