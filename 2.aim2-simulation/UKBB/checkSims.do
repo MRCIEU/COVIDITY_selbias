@@ -14,7 +14,7 @@ if ("`selInteractEffect'" != "nointeract") {
 * beta for bmi should be ~0.1617
 * beta for covid should be ~log(5.05) = 1.619
 
-insheet using "out/sim-`bmiEffect'-`selInteractEffect'-checking.csv", clear
+insheet using "out/sim-`bmiEffect'-`selInteractEffect'0-checking-all.csv", clear
 
 summ beta if param == "bmi"
 summ beta if param == "covid"
@@ -32,7 +32,7 @@ summ beta if param == "covid_nointeraction"
 
 
 clear all
-insheet using "out/sim-`bmiEffect'-`selInteractEffect'-summaries.csv", clear
+insheet using "out/sim-`bmiEffect'-`selInteractEffect'0-summaries-all.csv", clear
 
 * should have mean=0, sd=1 i.e. it is standardised
 summ mean if variable == "sd_bmi"

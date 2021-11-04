@@ -12,6 +12,11 @@ All simulations are run on Blue Crystal phase 3, see job files in the `jobs` dir
 ## Check sim generated data
 
 ```bash
+Rscript ../combineSummaries.R null 0
+Rscript ../combineSummaries.R effect 0
+```
+
+```bash
 stata mainCheckSims.do
 ```
 
