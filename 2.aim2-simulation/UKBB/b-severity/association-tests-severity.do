@@ -16,6 +16,8 @@ local covars = "`2'"
 	file write myfile2 %04.0f (`i') ",sd_bmi," %7.6f (`r(mean)') "," %7.6f (`r(min)') "," %7.6f (`r(max)') _n
 	summ covid
 	file write myfile2 %04.0f (`i') ",covid," %7.6f (`r(mean)') "," %7.6f (`r(min)') "," %7.6f (`r(max)') _n
+	summ covidSeverity
+	file write myfile2 %04.0f (`i') ",covidseverity," %7.6f (`r(mean)') "," %7.6f (`r(min)') "," %7.6f (`r(max)') _n
 	summ selection1
         file write myfile2 %04.0f (`i') ",selection1," %7.6f (`r(mean)') "," %7.6f (`r(min)') "," %7.6f (`r(max)') _n
 	summ selection
