@@ -241,6 +241,7 @@ while `i'<=`nSim' {
 
 file close myfile
 file close myfile2
+file close myfile3
 
 log close
 
