@@ -100,7 +100,8 @@ while `i'<=`nSim' {
 	}
 
 	gen pCovid=exp(covidRiskPart)/(1+exp(covidRiskPart))
-	gen covid = rbinomial(1,pCovid) 
+	gen covid = runiform() < pCovid
+	*gen covid = rbinomial(1,pCovid) 
 	
 
 	***
@@ -118,7 +119,8 @@ while `i'<=`nSim' {
 		di "SIM ISSUE: invalid probabilities"
 	}
 
-        gen selectionx = rbinomial(1,pSelx)
+	gen selectionx = runiform() < pSelx
+        *gen selectionx = rbinomial(1,pSelx)
 	
 
 	if ("`selInteractEffect'" == "plausible") {
