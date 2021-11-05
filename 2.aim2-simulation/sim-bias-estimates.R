@@ -41,7 +41,20 @@ printStats <- function(simres, trueeffect, strata, outfile) {
 	covMCSE = sqrt(cov*(1-cov)/nsim)
 
 
-	return(list(biasMean=meanbias, biasMCSE=biasMCSE, coverage=cov, coverageMCSE=covMCSE))
+	##
+	## bias eliminated coverage
+
+	biasedeffect = trueeffect + meanbias
+	simres$elimcovered = simres$lower <= biasedeffect & simres$upper >= biasedeffect
+        elimcov = length(which(simres$elimcovered==1))/nsim
+	
+
+	##
+	## bias eliminated coverage MCSE
+
+	elimcovMCSE = sqrt(elimcov*(1-elimcov)/nsim)
+
+	return(list(biasMean=meanbias, biasMCSE=biasMCSE, coverage=cov, coverageMCSE=covMCSE, biasElimCoverage=elimcov, biasElimCoverageMCSE=elimcovMCSE))
 
 }
 
@@ -118,28 +131,33 @@ estimatesForSim <- function(bmiEffect, selInteractEffect, large) {
 	res = printStats(simres, trueeffect, "all")
 	resstr = paste0(formatStat(res$biasMean), " (", formatStat(res$biasMCSE), ")")
 	resstrCov = paste0(formatStat(res$coverage, 3), " (", formatStat(res$coverageMCSE), ")")
+	resstrElimCov = paste0(formatStat(res$biasElimCoverage, 3), " (", formatStat(res$biasElimCoverageMCSE), ")")
 
 	res = printStats(simres, trueeffect, "all-confadj")
 	resstr = paste(resstr, paste0(formatStat(res$biasMean), " (", formatStat(res$biasMCSE), ")"), sep='\t')
 	resstrCov = paste(resstrCov, paste0(formatStat(res$coverage, 3), " (", formatStat(res$coverageMCSE), ")"), sep='\t')
+	resstrElimCov = paste(resstrElimCov, paste0(formatStat(res$biasElimCoverage, 3), " (", formatStat(res$biasElimCoverageMCSE), ")"), sep='\t')
 
 	res = printStats(simres, trueeffect, "selected")
 	resstr = paste(resstr, paste0(formatStat(res$biasMean), " (", formatStat(res$biasMCSE), ")"), sep='\t')
 	resstrCov = paste(resstrCov, paste0(formatStat(res$coverage, 3), " (", formatStat(res$coverageMCSE), ")"), sep='\t')
+	resstrElimCov = paste(resstrElimCov, paste0(formatStat(res$biasElimCoverage, 3), " (", formatStat(res$biasElimCoverageMCSE), ")"), sep='\t')
 
 	res = printStats(simres, trueeffect, "selected-confadj")
 	resstr = paste(resstr, paste0(formatStat(res$biasMean), " (", formatStat(res$biasMCSE), ")"), sep='\t')
 	resstrCov = paste(resstrCov, paste0(formatStat(res$coverage, 3), " (", formatStat(res$coverageMCSE), ")"), sep='\t')
+	resstrElimCov = paste(resstrElimCov, paste0(formatStat(res$biasElimCoverage, 3), " (", formatStat(res$biasElimCoverageMCSE), ")"), sep='\t')
 
 	res = printStats(simres, trueeffect, "control-everyone")
 	resstr = paste(resstr, paste0(formatStat(res$biasMean), " (", formatStat(res$biasMCSE), ")"), sep='\t')
 	resstrCov = paste(resstrCov, paste0(formatStat(res$coverage, 3), " (", formatStat(res$coverageMCSE), ")"), sep='\t')
+	resstrElimCov = paste(resstrElimCov, paste0(formatStat(res$biasElimCoverage, 3), " (", formatStat(res$biasElimCoverageMCSE), ")"), sep='\t')
 
 
 	#cat(resstr, outfile, append=TRUE)
 	cat('bias,', resstr, '\n')
 	cat('coverage,', resstrCov, '\n')
-
+	cat('biasElimCoverage,', resstrElimCov, '\n')
 }
 
 
