@@ -1,11 +1,11 @@
 
 
-do ../checkSims.do "null" "nointeract"
-do ../checkSims.do "null" "plausible"
-do ../checkSims.do "null" "extreme"
+do ../checkSims.do "null" "nointeract" "severity"
+do ../checkSims.do "null" "plausible" "severity"
+do ../checkSims.do "null" "extreme" "severity"
 
 
-do ../checkSims.do "effect" "nointeract"
-do ../checkSims.do "effect" "plausible"
-do ../checkSims.do "effect" "extreme"
+do ../checkSims.do "effect" "nointeract" "severity"
+do ../checkSims.do "effect" "plausible" "severity"
+do ../checkSims.do "effect" "extreme" "severity"
 

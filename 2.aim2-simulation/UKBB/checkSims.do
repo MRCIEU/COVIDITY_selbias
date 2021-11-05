@@ -5,6 +5,7 @@ di "BMI affects covid risk: `bmiEffect'"
 local selInteractEffect = "`2'"
 di "Interaction effect of BMI/sars-cov-2 on selection: `selInteractEffect'"
 
+local severity = "`3'"
 
 
 if ("`selInteractEffect'" != "nointeract") {
@@ -39,6 +40,10 @@ summ mean if variable == "sd_bmi"
 
 * should be ~ 3.16%
 summ mean if variable == "covid"
+
+if ("`severity'" == "severity") {
+summ mean if variable == "covidseverity"
+}
 
 * should be ~ 1.156% selected into tested subsample
 summ mean if variable == "selection"
