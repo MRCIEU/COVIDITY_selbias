@@ -30,7 +30,7 @@ library(ggpubr)
 ## 2. Read in the dataset with all variables and make a copy 
 #########################################################################################################
 
-COVID1_YP_raw <- read_delim("//rdsfcifs.acrc.bris.ac.uk/MRC-IEU-research/projects/ieu2/p6/081/working/data/COVIDITY/yp_outc_pred.csv", ",")
+COVID1_YP_raw <- read_delim("yp_outc_pred.csv", ",")
 head(COVID1_YP_raw)
 COVID1_YP <- COVID1_YP_raw
 
@@ -47,22 +47,8 @@ COVID1_YP <- COVID1_YP %>%
   mutate(yp_recent_Smk = as.factor(yp_recent_Smk)) %>%
   mutate(had_covid1 = as.factor(had_covid1)) %>%
   mutate(had_covid1_controls2 = as.factor(had_covid1_controls2)) %>%
-  mutate(had_covid_suspNo1 = as.factor(had_covid_suspNo1)) %>%
-  mutate(had_covid_suspNo1_controls2 = as.factor(had_covid_suspNo1_controls2)) %>%
-  mutate(menni_pred_q1 = as.factor(menni_pred_q1)) %>%
-  mutate(menni_pred_q1_controls2 = as.factor(menni_pred_q1_controls2)) %>%
   mutate(had_covid2 = as.factor(had_covid2)) %>%
-  mutate(had_covid2_controls2 = as.factor(had_covid2_controls2)) %>%
-  mutate(had_covid_suspNo2 = as.factor(had_covid_suspNo2)) %>%
-  mutate(had_covid_suspNo2_controls2 = as.factor(had_covid_suspNo2_controls2)) %>%
-  mutate(menni_pred_q2 = as.factor(menni_pred_q2)) %>%
-  mutate(menni_pred_q2_controls2 = as.factor(menni_pred_q2_controls2)) %>%
-  mutate(covid_nonq1 = as.factor(covid_nonq1)) %>%
-  mutate(noncovid_nonq1 = as.factor(noncovid_nonq1))  %>%
-  mutate(sarscov2_data1 = as.factor(sarscov2_data1))    %>%
-  mutate(covid_nonq2 = as.factor(covid_nonq2)) %>%
-  mutate(noncovid_nonq2 = as.factor(noncovid_nonq2))  %>%
-  mutate(sarscov2_data2 = as.factor(sarscov2_data2))  
+  mutate(had_covid2_controls2 = as.factor(had_covid2_controls2)) 
 
 COVID1_YP <- COVID1_YP %>%  
   mutate(yp_age1_yrs = as.numeric(yp_age_yrs_COVID1)) %>%
