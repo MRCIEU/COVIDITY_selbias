@@ -1,4 +1,4 @@
-This corresponds to the complete case, **multivariable logistic** regression analyses of the association between BMI and **SARS-CoV-2 infection** (**"SECTION 2: EMPIRICAL COHORT ANALYSES - Exploring bias due to selection in the association of BMI with SARS-CoV-2 infection and death-with-COVID-19"**). They are adjusted for age, sex, smoking status, educational attainment and Index of Multiple Deprivation.
+This corresponds to the complete case, **multivariable logistic** regression analyses of the association between BMI and **SARS-CoV-2 infection** (**"SECTION 2: EMPIRICAL COHORT ANALYSES - Exploring bias due to selection in the association of BMI with SARS-CoV-2 infection and death-with-COVID-19"**). Models were adjusted for age, sex, smoking status, educational attainment and Index of Multiple Deprivation.
 
 Comparisons were:
 
