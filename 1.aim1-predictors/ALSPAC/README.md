@@ -1,3 +1,5 @@
+# Assessing candidate predictors of selection into SARS-CoV-2 ALSPAC subsamples
+
 This corresponds to the **univariable logistic** regression analyses of candidate predictors of selection into SARS-CoV-2 ALSPAC subsamples (***"SECTION 2: EMPIRICAL COHORT ANALYSES" - Assessing candidate predictors of selection into SARS-CoV-2 subsamples***). The outcome was **SARS-CoV-2 infection**, and we assessed 4 comparisons: 
 
 i) **Assessed VS non-assessed**
