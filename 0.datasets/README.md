@@ -1,3 +1,5 @@
+This contains the code for deriving the variables used in the analyses.
+
 *See details for each cohort in each folder.* 
 
 # Derive Outcomes 
