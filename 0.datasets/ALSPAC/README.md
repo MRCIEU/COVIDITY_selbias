@@ -18,4 +18,4 @@
 
 
 ***Candidate predictors of selection:*** 
-Derived by DS in SPSS using the variables in Supplementary Table 1, which were previously used in "Bias from questionnaire invitation and response in COVID-19 research: an example using ALSPAC" (*Fernández-Sanlés A, Smith D, Clayton GL et al. Bias from questionnaire invitation and response in COVID-19 research: an example using ALSPAC. Wellcome Open Res 2021, 6:184 [https://doi.org/10.12688/wellcomeopenres.17041.1]*).  
+>Derived by DS in SPSS using the variables in Supplementary Table 1, which were previously used in "Bias from questionnaire invitation and response in COVID-19 research: an example using ALSPAC" (*Fernández-Sanlés A, Smith D, Clayton GL et al. Bias from questionnaire invitation and response in COVID-19 research: an example using ALSPAC. Wellcome Open Res 2021, 6:184 [https://doi.org/10.12688/wellcomeopenres.17041.1]*).  
