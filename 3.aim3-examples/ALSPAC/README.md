@@ -1,3 +1,7 @@
+# Exploring bias due to selection in the association of BMI with SARS-CoV-2 infection in ALSPAC
+
+
+
 This corresponds to the **multivariable logistic** regression analyses of the association between BMI and **SARS-CoV-2 infection** (***"SECTION 2: EMPIRICAL COHORT ANALYSES - Exploring bias due to selection in the association of BMI with SARS-CoV-2 infection and death-with-COVID-19"***). Complete case models were adjusted for *age, sex, smoking status, educational attainment* and *Index of Multiple Deprivation*.
 
 Comparisons were:
