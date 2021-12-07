@@ -1,4 +1,4 @@
-***Outcomes:***
+# Outcomes
 
 -**Assessed VS non-assessed**
 >In the whole sample: Having data on SARS-CoV-2 infection compared to having no data (reply to COVID-19 questionnaire vs no answer to COVID-19 questionnaire)
@@ -17,5 +17,5 @@
 
 
 
-***Candidate predictors of selection:*** 
+# Candidate predictors of selection
 >Derived by DS in SPSS using the variables in Supplementary Table 1, which were previously used in "Bias from questionnaire invitation and response in COVID-19 research: an example using ALSPAC" (*Fernández-Sanlés A, Smith D, Clayton GL et al. Bias from questionnaire invitation and response in COVID-19 research: an example using ALSPAC. Wellcome Open Res 2021, 6:184 [https://doi.org/10.12688/wellcomeopenres.17041.1]*).  
