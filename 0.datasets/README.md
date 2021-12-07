@@ -1,6 +1,6 @@
 *See details for each cohort in each folder.* 
 
-# Outcomes 
+# Derive Outcomes 
 
 ## Outcomes related to SARS-CoV-2 infection
 
@@ -34,6 +34,6 @@
 
 
 
-# Candidate predictors of selection
+# Derive candidate predictors of selection
 >Supplementary Table 1 includes all variables assessed as potential predictors of selection into COVID-19 related subsamples.  
 
