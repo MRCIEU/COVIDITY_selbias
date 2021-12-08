@@ -1,3 +1,3 @@
-## README.md
+# Deriving variables in UK Biobank
 
-# Scripts used for UK Biobank analyses to generate datasets for analyses, including defining COVID-19 cases
+The scripts used for UK Biobank analyses to generate datasets for analyses, including defining COVID-19 cases.

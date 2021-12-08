@@ -1,41 +1,30 @@
+# Deriving variables
+
 This contains the code for deriving the variables used in the analyses.
 
-*See details for each cohort in each folder.* 
+This folder contains code for deriving the SARS-CoV-2 infection and death-with-COVID-19 outcome variables, and the candidate predictors of selection.
 
-# Derive Outcomes 
+See details specific to each cohort in each folder.
 
-## Outcomes related to SARS-CoV-2 infection
+## Derive Outcomes 
+
+Outcomes related to SARS-CoV-2 infection:
 
 -**Assessed VS non-assessed**
->In the whole sample: Having data on SARS-CoV-2 infection compared to having no data 
-
 -**SARS-CoV-2 (+) vs SARS-CoV-2 (-)**
->In the selected subsample: Assessed as having had a SARS-CoV-2 infection compared to assessed as not having had a SARS-CoV-2 infection 
-
 -**SARS-CoV-2 (+) vs non-assessed**
->Assessed as having had SARS-CoV-2 infection compared to having no data 
-
 -**SARS-CoV-2 (-) vs non-assessed**
->Assessed as not having had a SARS-CoV-2 infection compared to having no data 
-
 -**SARS-CoV-2 (+) vs “everyone else”**
->Assessed as having had a SARS-CoV-2 infection compared to assessed as not having had a SARS-CoV-2 infection OR no data 
+
+Outcomes related to Death with COVID-19:
+
+-**Death-with-COVID-19 vs assessed**
+-**Death-with-COVID-19 vs SARS-CoV-2 (-)**
+-**Death-with-COVID-19 vs SARS-CoV-2 (+)**
 
 
+## Derive candidate predictors of selection
 
-## Outcomes related to Death with COVID-19
-
--**comp1**
->bla 
-
--**comp2**
->bla 
-
--**comp3**
->bla 
-
-
-
-# Derive candidate predictors of selection
->Supplementary Table 1 includes all variables assessed as potential predictors of selection into COVID-19 related subsamples.  
+The candidate predictors of selection used are specific to each cohort.
+These are described in Supplementary Table 1 of the paper.
 
