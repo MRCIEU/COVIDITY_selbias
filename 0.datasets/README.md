@@ -2,7 +2,7 @@
 
 This folder contains code for deriving the SARS-CoV-2 infection and death-with-COVID-19 outcome variables, and the candidate predictors of selection.
 
-See details specific to each cohort in each folder.
+See details specific to each cohort in each subfolder.
 
 ## Derive Outcomes 
 
