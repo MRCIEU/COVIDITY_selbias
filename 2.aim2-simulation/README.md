@@ -1,12 +1,10 @@
 # Simulations in UK Biobank and ALSPAC
 
-Aims to investigate:
-1) The extent of bias due to selection in observational covid studies.
-2) The effectiveness of approaches that aim to minimise the bias.
+These simulations aimed to determine the potential magnitude and direction of bias due to selection and misclassification (in 'everyone else' analyses) in observational covid studies.
 
+The code for the simulations for each cohort are found in their respective subdirectories.
 
-
-These simulation use Stata on BlueCrystal phase.
+These simulation use Stata on BlueCrystal phase 3.
 
 Load Stata with:
 

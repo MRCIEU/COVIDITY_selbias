@@ -2,13 +2,15 @@
 # Simulations in UK Biobank - COVID-19 severity
 
 
+## Run simulations
+
 All simulations are run on Blue Crystal phase 3, see job files in the `jobs` directory.
 
 
 
+## 2. Check sim generated data
 
-## Check sim generated data
-
+Check the generated data has the intended distributions and relationships.
 
 ```bash
 Rscript ../../combineSummaries.R null 0
@@ -23,12 +25,10 @@ stata mainCheckSims.do
 
 
 
+## 3. Generate bias statistics
 
 
-## Generate bias statistics
-
-
-Generate the average bias and monte carlo SE for each simulation version
+Generate the bias and monte carlo SE for each simulation version
 
 ```bash
 Rscript ../../sim-bias-estimates.R null 0
@@ -44,7 +44,7 @@ Rscript ../../sim-bias-estimates.R "effect" 1
 
 
 
-## Plot results:
+## 4. Plot results:
 
 This needs to be run after generating bias statistics, as that script creates a combined results file for each scenario
 (across all blue crytstal job arrays).

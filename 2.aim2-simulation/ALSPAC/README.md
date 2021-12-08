@@ -3,13 +3,15 @@
 # Simulations of SARS-CoV-2 infection based on ALSPAC
 
 
-## Run simulations
+## 1. Run simulations
 
 All simulations are run on Blue Crystal phase 3, see job files in the `jobs` directory.
 
 
 
-## Check sim generated data
+## 2. Check sim generated data
+
+Check the generated data has the intended distributions and relationships.
 
 ```bash
 Rscript ../combineSummaries.R null 0
@@ -22,10 +24,10 @@ stata mainCheckSims.do
 
 
 
-## Generate bias statistics
+## 3. Generate bias statistics
 
 
-Generate the average bias and monte carlo SE for each simulation version
+Generate the bias and monte carlo SE for each simulation version:
 
 ```bash
 Rscript ../sim-bias-estimates.R null 0
