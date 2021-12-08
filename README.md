@@ -8,7 +8,7 @@ This repository contains the pipeline of the analyses performed to inform about 
 
 3. Steps and code to explore bias due to selection in the association of *particular risk factors* with *SARS-CoV-2 infection* and *COVID-19 severity*:
 
-   a. *Empirical analysis* exploring potential bias in the estimated associations of BMI, sex and smoking with SARS-CoV-2 infection and COVID-19 severity (**_3.aim3-examples_**).
+   a. *Empirical analysis* exploring potential bias in the estimated associations of BMI, sex and smoking with SARS-CoV-2 infection and COVID-19 severity (**_2.aim2-empirical_**).
 
-   b. *Simulation studies* exploring potential bias in the estimated association of BMI with SARS-CoV-2 infection and COVID-19 severity (**_2.aim2-simulation_**).
+   b. *Simulation studies* exploring potential bias in the estimated association of BMI with SARS-CoV-2 infection and COVID-19 severity (**_3.aim3-simulation_**).
 
