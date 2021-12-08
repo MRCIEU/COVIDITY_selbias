@@ -13,4 +13,3 @@ This repository contains the pipeline of the analyses performed to inform about 
 
    b. *Simulation studies* exploring potential bias in the estimated association of BMI with SARS-CoV-2 infection and COVID-19 severity (**_2.aim2-simulation_**).
 
-4. Steps and code to explore *methods to mitigate* bias due to selection into COVID-19 studies (**_4.aim4-methods_selbias_**).
